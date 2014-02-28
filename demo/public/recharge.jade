@@ -1,0 +1,9 @@
+#payment.span5
+        label.span2 Número de créditos
+        input#credits.span3(type='number', value='5', min='5', max='10000')
+        label.span2 Total da compra: R$
+        input#value.span3(type='number',style='display: inline;',value='5,95',readonly='readonly')
+        div(style='text-align:center')        
+                button.calculate.btn Recalcular custo de créditos
+.span5(style='display:none') 
+        {{ form.render }}

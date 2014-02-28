@@ -1,0 +1,15 @@
+head
+    script(type='text/javascript', src='static/js/spreadapp.js')
+    script(type='text/javascript', src='static/js/spreadevents.js')
+body
+    .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h3#myModalLabel Postagem
+    .modal-body(style='background-color: #00A946;')
+            .spreadcontent
+              img(src='#{image}',alt='#{description}')
+            .id(style='display:none;') #{imageid}
+            .token(style='display:none;') %!
+    .modal-footer
+            button.btn.btn-danger.deletable Remover
+            button.btn.btn-primary.send.spread Espalhar

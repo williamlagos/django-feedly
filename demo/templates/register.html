@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block base_content %}
+<head>
+    <style>
+        html { 
+          background: url("/static/img/wallpaper.png") no-repeat center center fixed; 
+          -webkit-background-size: cover;
+          -moz-background-size: cover;
+          -o-background-size: cover;
+          background-size: cover;
+        }
+    </style>
+</head>
+<div id="Participate" class="container well">
+  <div class="row">
+  <div class="col-lg-offset-2 col-lg-8">
+  <form action="/efforia/participate" method="POST" class="col-lg-6 registerview">
+  	<fieldset>
+    <legend>Quero participar</legend>
+    <div class="form-group"><input class="form-control" type="text" name="name" placeholder="Nome completo"/></div>
+    <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Usuário" class="username"/></div>
+    <div class="form-group"><input class="form-control" name="password" type="password" placeholder="Senha" class="password"/></div>
+    <div class="form-group"><input class="form-control" name="repeatpassword" type="password" placeholder="Repetir a senha"/></div>
+    <button type="submit" style="margin-left:0px" class="btn btn-primary btn-block participate">Participar do Efforia</button>
+    </fieldset>
+  </form>
+  <form id="login" action="/efforia/enter" method="POST" class="col-lg-6">
+    <fieldset>
+    <legend>Já participo</legend>
+    <div class="form-group"><input class="form-control" name="username" type="text" placeholder="Usuário" class=""/></div>
+    <div class="form-group"><input class="form-control" name="password" type="password" placeholder="Senha" class=""/></div>
+    <button type="submit" style="margin-left:0px" data-loading-text="Entrando..." class="btn btn-block btn-success login">Entrar no Efforia</button>
+    <div style="margin-top:10px">
+    <button href="{% url 'socialauth_begin' 'twitter' %}" class="btn btn-block integration twitter"><img width="36" src="{{ STATIC_URL }}img/twitter.png" style="margin:0px 5px"/>
+    <div class="divider inline">Fazer login com uma conta do Twitter</div></button>
+    <button href="{% url 'socialauth_begin' 'facebook' %}" class="btn btn-block integration facebook"><img width="36" src="{{ STATIC_URL }}img/facebook.png" style="margin:0px 5px"/>
+    <div class="divider inline">Fazer login com uma conta do Facebook</div></button>
+    </div>
+    </fieldset>
+  </form>
+  </div>
+  </div>
+  <div class="row" style="margin-top:10px">
+  <div class="col-lg-offset-3 col-lg-6">
+  <button href="{% url 'socialauth_begin' 'github' %}" class="btn btn-block btn-default integration github"><img width="108" src="{{ STATIC_URL }}img/github.png" style="margin:2px 5px"/>
+    <div style="color:black;" class="divider inline">Fazer login com uma conta do GitHub
+    </div>
+  </button>
+  <button href="{% url 'socialauth_begin' 'google-oauth2' %}" class="btn btn-block integration youtube"><img width="105" src="{{ STATIC_URL }}img/youtube.png" style="margin:0px 7px"/>
+    <div class="divider inline">Fazer login com uma conta do YouTube
+    </div>
+  </button>
+  <button href="{% url 'socialauth_begin' 'foursquare' %}" class="btn btn-block integration foursquare"><img width="108" src="{{ STATIC_URL }}img/foursquare.png" style="margin:4px 5px"/>
+    <div class="divider inline">Fazer login com uma conta do Foursquare
+    </div>
+  </button>
+  </div>
+  </div>
+</div>
+{% endblock %}

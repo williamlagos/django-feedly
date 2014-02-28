@@ -1,0 +1,123 @@
+/* Folha de estilos do Efforia */
+
+@font-face { font-family: 'Ubuntu'; src: url('/static/fonts/ubuntu.ttf'); }
+@font-face { font-family: 'Ubuntu'; src: url('/static/fonts/ubuntu-bold.ttf'); font-weight: bold; }
+
+body { background:transparent; }
+button,a,a:hover { outline:none; text-decoration:none; color:black; }
+h1 { font-size: 1.6em; text-align:center; font-weight:bolder; }
+h2 { font-size: 1.3em; text-align:center; font-weight:bold; }
+h3 { font-size: 1.0em; font-weight:bold; }
+table { color:black; }
+
+/* Forca a estilizacao do input, mesmo readonly. */
+
+input[readonly] {
+	background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+}
+
+/* Correcao para os modais em mobile */
+
+@media (max-width: 480px) {
+  .modal-fullscreen {
+    left: 0 !important;
+    right: 0 !important;
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+  }
+}
+
+.information { padding:15px }
+.upload { font-size:10em; background:transparent; cursor:hand; cursor:pointer; text-align:center;}
+.navbar-nav > li > a { padding-top:12px; padding-bottom:12px; }
+.bottom { bottom:0;	margin-bottom:0; }
+.big-button { margin-bottom:5%; margin-left:5%; width:90% }
+.big-icon { margin: 20px; display:block; width:75%; }
+.hspace { margin: 0px 1px; text-align:center; }
+.btn,.btn:hover { font-family: inherit; }
+.tutor { text-align:justify; color:white; }
+.date { text-align:center; color:white; margin:5px; }
+.divider { margin:5px; }
+.content { padding:10px; text-align:justify; }
+.inline { display:inline; color:white; }
+.hidden { display:none; }
+.centered { text-align:center; margin:auto; }
+.justified { text-align:justify; }
+.green { color:#1A6B52; }
+.lightgreen { color:#00CB68; }
+.left { margin-left:20px; }
+.right { margin-right:20px; }
+.selected { box-shadow: 0px 0px 20px #D30000; font-weight:bold; }
+.keyword { margin:5px; padding:10px; text-align:center; background:#DEDEDE; color:black; border-radius:5px }
+.box { background:#fff; color:black; border-radius:5px 5px 0px 0px; }
+.comment { padding:10px; border-radius:5px 5px 0px 0px; margin-bottom:-10px; }
+.player-height { max-height:360px; }
+.brick { padding: 5px; }
+.giant-glyphicon { font-size: 7em; }
+.big-glyphicon { font-size: 4em; }
+.icon-glyphicon { line-height: 1.5; margin-top: -60px;}
+.big-label { font-size: 1.3em; }
+.facebook,.facebook:hover { text-align:left; background:#3C5A98; text-shadow:none; }
+.twitter,.twitter:hover { text-align:left; background:#00ACED; text-shadow:none; }
+.youtube,.youtube:hover { text-align:left; background:#FF1F20; text-shadow:none; }
+.foursquare,.foursquare:hover { text-align:left; background:#0072B1; text-shadow:none; }
+.github,.github:hover { text-align:left; background:white; text-shadow:none; }
+.video { padding:0px; }
+.player { text-align:center; margin: -250px 0 0 -400px; width: 800px; }
+.title { background:black; color:white; margin:0px; border-radius:5px; padding:5px; }
+.title.subtitle { border-radius:0px 0px 5px 5px; margin-top:-5px; font-size:1.3em; }
+.black { color:#222222; }
+.dark { background:black; color:white; }
+.white { color: white; }
+.red { background:#D2322D; }
+.profilebutton { height:50px; cursor:hand; cursor:pointer; }
+.fixocentral { position: fixed; text-align: center; }
+.menu { margin:0; padding:0; text-align:left }
+.user { background:#39B3D7; border-radius:5px; }
+
+.transitions {
+    -webkit-transition:all 1.0s ease-in-out;
+	-moz-transition:all 1.0s ease-in-out;
+	-o-transition:all 1.0s ease-in-out;
+	-ms-transition:all 1.0s ease-in-out;	
+	transition:all 1.0s ease-in-out; 
+}
+
+#Participate { margin-top:50px; }
+#Container { height:400px; padding:5px; }
+#Progresso { margin-top:auto; background:transparent; }
+#Canvas.fixocentral.transitions { width:100%; top:40px; z-index:2; }
+#Navegacao { position:fixed; }
+#efforia.transitions{ }
+
+#Grade.transitions{
+	margin-top:60px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#Rodape.fixocentral.transitions{
+	width:100%;
+	bottom:0px;
+}
+
+#Central.transitions{
+	position:fixed;
+	height:90%; 
+	margin-top:40px;
+	margin-bottom:5%; 
+	width:100%; text-align:center;
+}
+
+/* Estilizacao para o grid/mosaico do Efforia */
+
+.block,.block-transparent,.module {
+	box-shadow: 0px 0px 15px #888;
+	overflow:hidden;
+	text-decoration:none;
+	border-radius:5px;
+	padding:0px;
+}

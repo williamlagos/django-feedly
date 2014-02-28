@@ -1,0 +1,16 @@
+.span5
+        label.span1 CEP
+        input.span4(placeholder='Coloque o código postal para calcular o frete.')
+        .span5
+                if credit != 0
+                        | Precisa de #{ credit } créditos a mais (R$ #{ credit }).
+                        | Total da compra:
+                        div(style='display: inline;') 
+                                Frete + #{ credit }
+                if credit == 0
+                        | Total da compra:
+                        div(style='display: inline;') 
+                                Frete + Créditos
+        #payment(style='display:none;')
+                | {{ payments.render }}
+                //a.cancelpurchase.ui-button.ui-widget.ui-state-default.ui-corner-all(style='padding: .4em 1em; width: 240px;') Cancelar compra

@@ -1,0 +1,17 @@
+head
+    script(type='text/javascript', src='static/js/spreadapp.js')
+    script(type='text/javascript', src='static/js/spreadevents.js')
+body
+    .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h3#myModalLabel #{product.name_trimmed}
+    .modal-body(style='background-color:#333;')
+            img(src='#{product.visual}',width='75%',style='margin-left:15%')
+            h1.pull-left.span2(style='color:#04C869') R$ #{product.credit}0
+            p.pull-right.span3(style='color:white; padding:5px;') #{product.description}
+            .id.hidden #{product.id}
+            .token.hidden $$
+    .modal-footer
+            button.btn.btn-danger.deletable Remover
+            button.btn.btn-primary.send.spread(data-loading-text='Espalhando...') Espalhar
+            button.btn.btn-success.cartmore Comprar

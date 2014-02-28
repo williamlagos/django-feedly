@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block base_content %}
+<head>
+    <style>
+        html { 
+          background: url("/static/img/wallpaper.png") no-repeat center center fixed; 
+          -webkit-background-size: cover;
+          -moz-background-size: cover;
+          -o-background-size: cover;
+          background-size: cover;
+        }
+    </style>
+</head>
+<div class="col-lg-4 col-lg-offset-4 container" style="background:#eee; margin-top:20px; border-radius:5px; padding:20px;">
+  <h2 style="font-size:2.5em">Seja bem-vindo</h2>
+  <p style="text-align:justify; color:black">Vamos precisar de mais algumas informa����es e uma foto sua  para que outras pessoas possam conhecer voc�� no Efforia. Caso n��o queira  basta apenas pular essa parte.</p>
+  <div class="information">
+    {% crispy form form.helper %}
+    
+  </div>
+  <button class="next btn btn-lg btn-block btn-primary" data-loading-text="Come��ando...">Pr��ximo</button>
+</div>
+{% endblock %}

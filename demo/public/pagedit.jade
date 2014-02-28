@@ -1,0 +1,15 @@
+.modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+        h3#myModalLabel Edição de Página
+.modal-body(style='background-color: #00A946;')
+        form#pageedit(action='spread/spread', method='post', accept-charset='utf-8')
+                label.span1 Título
+                input#pagetitle.span4.title(type='text',placeholder='#{title}')
+                textarea#pagetxt.wysiwygtxt(cols='60', rows='7', placeholder='#{content}')
+        .tutor.span5
+                | Neste módulo você pode construir páginas para o seu site oficial. Para criá-las, basta dar um nome que aparecerá na barra de menus e montar a página ao seu gosto. Ela é editável pelo mosaico.
+        .id(style='display:none') #{pageid}
+        .token(style='display:none;') !#
+.modal-footer
+        button.btn.btn-danger.deletable Remover
+        button.btn.btn-primary.send.pagesave(data-loading-text='Salvando...') Salvar
