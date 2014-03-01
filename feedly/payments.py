@@ -18,9 +18,6 @@
 #
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from django_pagseguro.pagseguro import CarrinhoPagSeguro,ItemPagSeguro
-from paypal.standard.forms import PayPalPaymentsForm
-from paypal.standard.widgets import ValueHiddenInput, ReservedValueHiddenInput
 from django.shortcuts import render 
 from django.http import HttpResponse as response
 from django.conf import settings
@@ -28,6 +25,13 @@ from django.template import Context,Template
 from django import forms
 from models import Sellable,Basket,user
 from feed import Mosaic
+
+try:
+    from django_pagseguro.pagseguro import CarrinhoPagSeguro,ItemPagSeguro
+    from paypal.standard.forms import PayPalPaymentsForm
+    from paypal.standard.widgets import ValueHiddenInput, ReservedValueHiddenInput
+except ImportError,e:
+    pass
 
 class Baskets(Mosaic):
     def view_items(self,request):

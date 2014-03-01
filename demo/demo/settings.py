@@ -16,7 +16,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Efforia. If not, see <http://www.gnu.org/licenses/>.
 #
-import os.path
+import sys,os
+
+sys.path.append(os.path.abspath('..'))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -36,7 +38,7 @@ SECRET_KEY = 'x5dvfbk$u-(07^f1229p*_%rcuc+nka45j6awo==*jkyjiucql'
 
 STATIC_ROOT = os.path.abspath('static')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.abspath('efforia/public')]
+STATICFILES_DIRS = [os.path.abspath('public')]
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -57,7 +59,6 @@ TEMPLATE_LOADERS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.contrib.messages.context_processors.messages',
-    'social_auth.context_processors.social_auth_by_type_backends',
     'django.core.context_processors.i18n',
     'django.core.context_processors.request',
     'django.core.context_processors.media',
@@ -76,10 +77,9 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'demo.urls'
 WSGI_APPLICATION = 'demo.wsgi.application'
 TEMPLATE_DIRS = [
-    os.path.abspath('demo/templates/control'),
-    os.path.abspath('demo/templates/context'),
-    os.path.abspath('demo/templates/'),
-    os.path.abspath('static'),
+    os.path.abspath('templates/control'),
+    os.path.abspath('templates/context'),
+    os.path.abspath('templates'),
 ]
 
 INSTALLED_APPS = [
@@ -90,7 +90,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    #'feedly',
+    'pure_pagination',
+    'feedly',
 ]
 
 LOGGING = {
@@ -118,11 +119,6 @@ LOGGING = {
 }
 
 AUTHENTICATION_BACKENDS = (
-    'social_auth.backends.twitter.TwitterBackend',
-    'social_auth.backends.facebook.FacebookBackend',
-    'social_auth.backends.google.GoogleOAuth2Backend',
-    'social_auth.backends.contrib.github.GithubBackend',
-    'social_auth.backends.contrib.foursquare.FoursquareBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 

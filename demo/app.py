@@ -6,10 +6,8 @@ from django.http import HttpResponse as response
 from django.http import HttpResponseRedirect as redirect
 from django.conf import settings
 
-from models import Spreadable,Image,Playable,Spreaded,Product
-from socialize.models import Profile
-from socialize.stream import StreamService,Dropbox
-from efforia.main import Efforia
+from demo.models import Spreadable,Image,Playable,Spreaded,Product
+from main import Efforia
 from feedly.feed import Activity
 
 def sp(x): return '!!' in x[1]

@@ -6,18 +6,19 @@ from django.conf import settings
 from django.http import HttpResponse as response
 from django.http import HttpResponseRedirect as redirect
 from django.shortcuts import render
-from paypal.standard.forms import PayPalPaymentsForm
-from paypal.standard.ipn.signals import payment_was_successful
-from shipping import fretefacil,correios
 from datetime import datetime
 
-from socialize.models import Profile
-from shipping.models import Deliverable
-from efforia.views import *
-from efforia.main import Efforia
+from demo.views import *
+from demo.models import Product
+from main import Efforia
 from feedly.models import Basket
 from app import Images
-from models import Product
+
+try:
+    from paypal.standard.forms import PayPalPaymentsForm
+    from paypal.standard.ipn.signals import payment_was_successful
+except ImportError,e:
+    pass
 
 class Cancel(Efforia):
     def __init__(self): pass
@@ -61,66 +62,6 @@ class Payments(Efforia):
                 p.save()
             self.accumulate_points(1,request)
             return response('')
-
-class Mail(Efforia,correios.Correios):
-    def __init__(self): pass
-    def postal_code(self,request):
-        u = self.current_user(request)
-        s = ''; mail_code = request.GET['address']
-        q = self.consulta(mail_code)[0]
-        d = fretefacil.create_deliverable('91350-180',mail_code,'30','30','30','0.5')
-        value = fretefacil.delivery_value(d)
-        formatted = '<div>Valor do frete: R$ <div style="display:inline;" class="delivery">%s</div></div>' % value 
-        for i in q.values(): s += '<div>%s\n</div>' % i
-        s += formatted
-        now,objs,rels = self.get_object_bydate(request.GET['object'],'$$')
-        obj = globals()[objs].objects.all().filter(date=now)[0]
-        deliverable = Deliverable(product=obj,buyer=u,mail_code=mail_code,code=d['sender'],receiver=d['receiver'],
-        height=int(d['height']),length=int(d['length']),width=int(d['width']),weight=int(float(d['weight'][0])*1000.0),value=value)
-        deliverable.save()
-        return response(s)
-
-class Deliveries(Efforia):
-    def __init__(self): pass
-    def view_package(self,request):
-        u = self.current_user(request)
-        form = DeliveryForm()
-        form.fields['address'].label = 'CEP'
-        if 'quantity' in request.GET:
-            quantity = request.GET['quantity']
-            credit = int(request.GET['credit'])
-        else:
-            quantity = 1; credit = 1
-        paypal_dict = {
-            "business": settings.PAYPAL_RECEIVER_EMAIL,
-            "amount": "1.00",
-            "item_name": "Produto do Efforia",
-            "invoice": "unique-invoice-id",
-            "notify_url": "http://www.efforia.com.br/paypal",
-            "return_url": "http://www.efforia.com.br/delivery",
-            "cancel_return": "http://www.efforia.com.br/cancel",
-            'currency_code': 'BRL',
-            'quantity': quantity,
-        }
-        payments = PayPalPaymentsForm(initial=paypal_dict)
-        diff = credit-u.profile.credit
-        if diff < 0: diff = 0
-        return render(request,"delivery.jade",{
-                                               'payments':payments,
-                                               'credit':diff,
-                                               'form':form
-                                               },content_type='text/html')
-    def create_package(self,request):
-        u = self.current_user(request)
-        Cart.objects.all().filter(user=u).delete()
-        return self.redirect('/')
-
-class SpreadBasket(Basket):
-    def product(self,prodid):
-	# for p in basket: 
-        # quantity += p.quantity
-        # value += p.product.credit*p.quantity
-	pass
 
 class Store(Efforia):
     def __init__(self): pass

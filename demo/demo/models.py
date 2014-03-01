@@ -3,8 +3,6 @@ from django.contrib.auth.models import User
 from feedly.models import Sellable
 from datetime import date
 import sys,os
-path = os.path.abspath("efforia")
-sys.path.append(path)
 
 locale = ('Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez')
 
