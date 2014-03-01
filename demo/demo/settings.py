@@ -92,6 +92,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'pure_pagination',
     'feedly',
+    'demo'
 ]
 
 LOGGING = {
