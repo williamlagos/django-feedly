@@ -1,0 +1,18 @@
+head
+    script(type='text/javascript', src='#{static_url}js/promoteapp.js')
+    script(type='text/javascript', src='#{static_url}js/promoteevents.js')
+body
+    .modal-dialog
+      .modal-content
+        .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h3.modal-title Promova
+        .modal-body(style='background-color: #740038; text-align:center;')
+            .btn-group.btn-group-justified
+                    a.btn.btn-default.option.active(href='promote/projects',next='projectcreate') Projetos
+                    a.btn.btn-default.option(href='promote/calendar',next='eventcreate') Eventos
+                    a.btn.btn-default.option(href='promote/movements',next='movementcreate') Movimentos
+            .form(style='margin-top: 10px;')
+        .modal-footer(style="margin-top:0px;")
+            button.btn(data-dismiss='modal', aria-hidden='true') Cancelar
+            button.btn.btn-primary.send.projectcreate(data-loading-text='Promovendo...') Promover

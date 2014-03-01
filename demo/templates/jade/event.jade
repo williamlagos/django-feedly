@@ -1,0 +1,35 @@
+head
+    script(type='text/javascript', src='/static/js/promoteapp.js')
+    script(type='text/javascript', src='/static/js/promoteevents.js')
+body
+    .modal-dialog
+      .modal-content
+        .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h3.modal-title Criação de Eventos
+        .modal-body(style='background-color: #740038; text-align:center;')
+            #event
+              form#evento(role='form',action='promote/calendar', method='post', accept-charset='utf-8')
+                .form-group
+                    input#id_name.form-control(name='name',maxlength='50',placeholder='Qual será o nome do seu evento?',type='text')
+                .form-group
+                    textarea.form-control.wysiwygtxt(rows='4',name='description',placeholder='Escreva um pouco sobre o evento que você está promovendo.',type='text')
+                .form-group
+                    input#id_location.form-control(name='location', maxlength='100', placeholder='Onde ele vai ser realizado?',type='text')
+                .form-group
+                    input.form-control(name='min', maxlength='100', placeholder='Número mínimo de participantes?',type='text')
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                          span.glyphicon.glyphicon-calendar
+                        input.datepicker.form-control(name='deadline', type='text', placeholder='Quando ele vai acontecer?')
+                .form-group
+                    .input-group
+                        span.input-group-addon R$
+                        input.form-control(name='value', maxlength='100', placeholder='Quanto que vai custar para participar?',type='text')
+                        span.input-group-addon ,00
+              .tutor
+                    | Eventos como shows, apresentações, lançamentos podem ser criados por aqui. Eles são propagados por todo o Efforia e nos eventos do Facebook
+        .modal-footer(style="margin-top:0px;")
+            button.btn(data-dismiss='modal', aria-hidden='true') Cancelar
+            button.btn.btn-primary.send.eventcreate(data-loading-text='Promovendo...') Promover

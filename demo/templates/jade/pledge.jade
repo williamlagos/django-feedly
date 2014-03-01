@@ -1,0 +1,9 @@
+#promotewindow.span3(style='text-align:center')
+        h2 Faltam R$ #{value}0 para o projeto acontecer
+        form#promoteform(action='efforia/basket', method='post', accept-charset='utf-8')
+            .input-group.input-group-lg(style='margin-bottom:30px; margin-left:0px')
+                span.input-group-addon(style='color:black') R$
+                input.form-control.input-lg#promotecredit(name='credit', maxlength='100', placeholder='Quanto você pretende investir?',type='text')
+                span.input-group-addon(style='color:black') ,00
+.tutor.span3.black
+        | A partir desta ferramenta, você pode apoiar este projeto por meio de pagamentos online. O pagamento é feito da forma que você quiser: por PayPal, boleto, cartão, enfim, existem inúmeras opções para que você não fique de fora!

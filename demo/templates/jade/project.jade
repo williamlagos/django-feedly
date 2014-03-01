@@ -1,0 +1,34 @@
+head
+    script(type='text/javascript', src='/static/js/promoteapp.js')
+    script(type='text/javascript', src='/static/js/promoteevents.js')
+body
+    .modal-dialog
+      .modal-content
+        .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h3.modal-title Criação de Projetos
+        .modal-body(style='background-color: #740038; text-align:center;')
+            #projects
+              form#project(action='promote/causes', method='post', accept-charset='utf-8', enctype='multipart/form-data')
+                .form-group
+                  input.form-control(type='text',name='title', placeholder='Que nome iremos dar ao projeto?')
+                .form-group
+                  input.form-control(type='text',name='keyword',placeholder='Uma palavra-chave sobre teu interesse nesse projeto.')
+                .form-group
+                  .input-group
+                    span.input-group-addon
+                      span.glyphicon.glyphicon-calendar
+                    input.datepicker.form-control(name='deadline', type='text', placeholder='Até quando estaremos arrecadando dinheiro?')
+                .form-group
+                  .input-group
+                    span.input-group-addon R$
+                    input.form-control(name='credit', maxlength='100', placeholder='Quanto você pretende arrecadar?',type='text')
+                    span.input-group-addon ,00
+                .form-group
+                  textarea.form-control.wysiwygtxt(rows='4',name='content',placeholder='Descreva o que você pretende atingir neste projeto.')
+                input(style='opacity: 0; display:none;', name='file', type='file')
+              .tutor
+                    | Projetos são ações movidas pelos usuários para levantar recursos para um determinado projeto de filme, música ou até mesmo álbum.
+        .modal-footer(style="margin-top:0px;")
+            button.btn(data-dismiss='modal', aria-hidden='true') Cancelar
+            button.btn.btn-primary.send.projectcreate(data-loading-text='Promovendo...') Promover        
