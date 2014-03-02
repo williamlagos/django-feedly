@@ -90,7 +90,7 @@ input[readonly] {
 #Container { height:400px; padding:5px; }
 #Progresso { margin-top:auto; background:transparent; }
 #Canvas.fixocentral.transitions { width:100%; top:40px; z-index:2; }
-#Navegacao { position:fixed; }
+#Navegacao { position:fixed; font-weight:bold; }
 #efforia.transitions{ }
 
 #Grade.transitions{
