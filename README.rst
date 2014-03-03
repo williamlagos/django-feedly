@@ -15,7 +15,7 @@ Quick start
         'feedly',
     )
 
-2. Include the polls URLconf in your project urls.py like this::
+2. Include the feedly URLconf in your project urls.py like this::
 
     url(r'^feedly/', include('feedly.urls')),
 
