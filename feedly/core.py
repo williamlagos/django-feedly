@@ -61,43 +61,6 @@ class Feedly(Mosaic):
             print e.hdrs
             print e.fp
         return response
-    def oauth_post_request(self,url,tokens,data={},social='twitter',headers={}):
-        pass
-        #=======================================================================
-        # #api = json.load(open('settings.json','r'))['social']
-        # posturl ='%s%s'%(api[social]['url'],url)
-        # if 'facebook' in social:
-        #     socialurl = '%s?%s'%(posturl,urllib.urlencode({'access_token':tokens}))
-        #     if 'start_time' in data: data['start_time'] = data['start_time'].date()
-        #     return self.do_request(socialurl,urllib.urlencode(data),headers)
-        # else:
-        #     access_token,access_token_secret = tokens.split(';')
-        #     token = oauth.Token(access_token,access_token_secret)
-        #     consumer_key = api[social]['client_key']
-        #     consumer_secret = api[social]['client_secret']
-        #     consumer = oauth.Consumer(consumer_key,consumer_secret)
-        #     client = oauth.Client(consumer,token)
-        #     try:
-        #         return client.request(posturl,'POST',urllib.urlencode(data))
-        #     except urllib2.HTTPError,e:
-        #         print e.code
-        #         print e.msg
-        #         print e.hdrs
-        #         print e.fp
-        #         return 1
-        #=======================================================================
-    def refresh_google_token(self,token):
-        pass
-        #=======================================================================
-        # api = json.load(open('settings.json','r'))['social']['google']
-        # if not token: token = self.own_access()['google_token']
-        # data = urllib.urlencode({
-        #     'client_id':      api['client_id'],
-        #     'client_secret':  api['client_secret'],
-        #     'refresh_token':  token,
-        #     'grant_type':    'refresh_token' })
-        # return json.loads(self.do_request(api['oauth2_token_url'],data))['access_token']
-        #=======================================================================
     def object_token(self,token):
         relations = settings.EFFORIA_TOKENS
         typobject = relations[token]
@@ -128,17 +91,3 @@ class Feedly(Mosaic):
         current_profile = Profile.objects.all().filter(user=u)[0]
         current_profile.points += points
         current_profile.save()
-    def own_access(self):
-        pass
-        #=======================================================================
-        # objs = json.load(open('settings.json','r'))
-        # google_api = objs['social']['google']
-        # twitter_api = objs['social']['twitter']
-        # facebook_api = objs['social']['facebook']
-        # access = {
-        #     'google_token': google_api['client_token'],
-        #     'twitter_token': '%s;%s' % (twitter_api['client_token'],twitter_api['client_token_secret']),
-        #     'facebook_token': facebook_api['client_token']
-        # }
-        # return access
-        #=======================================================================
