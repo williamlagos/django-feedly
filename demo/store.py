@@ -10,9 +10,9 @@ from datetime import datetime
 
 from demo.views import *
 from demo.models import Product
-from main import Efforia
+from demo.app import Images
 from feedly.models import Basket
-from app import Images
+from main import Efforia
 
 try:
     from paypal.standard.forms import PayPalPaymentsForm

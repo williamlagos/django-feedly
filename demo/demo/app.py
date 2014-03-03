@@ -12,7 +12,8 @@ from feedly.feed import Activity
 
 from main import Efforia
 from feedly.feed import Activity
-from demo.models import Profile,Sellable,Event,Project,Interest,Movement,Promoted
+from feedly.models import Profile,Sellable
+from demo.models import Event,Project,Interest,Movement,Promoted
 
 def sp(x): return '!!' in x[1]
 def pl(x): return '>!' in x[1]

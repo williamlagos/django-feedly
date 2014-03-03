@@ -113,22 +113,22 @@ $.fn.generateButtons = function(name,value,qty){
     var paypal_button = "<div class='paypal hidden'></div>"
     var pagseguro_button = "<div class='pagseguro hidden'></div>"
     $(this).html(paypal_button+pagseguro_button);
-    $.get('/efforia/paypal',{'product':name,'value':value,'qty':qty},function(data){
+    $.get('/feedly/paypal',{'product':name,'value':value,'qty':qty},function(data){
         $('.paypal').html(data).removeClass('hidden');
         $('.paypal input[name=submit]').attr('src','/static/img/paypal.png').addClass('btn btn-info').css({'width':'70%'});
     });
-    $.get('/efforia/pagseguro',{'product':name,'value':value,'qty':qty},function(data){
+    $.get('/feedly/pagseguro',{'product':name,'value':value,'qty':qty},function(data){
         $('.pagseguro').html(data).removeClass('hidden');
         $('.pagseguro input[name=submit]').attr('src','/static/img/pagseguro.png').addClass('btn btn-success').css({'width':'70%'});
     });
 }
 
 $.fn.createPayments = function(){
-    $.get('/efforia/paypal/cart',{},function(data){
+    $.get('/feedly/paypal/cart',{},function(data){
         $('.paypal').html(data).removeClass('hidden');
         $('.paypal input[name=submit]').attr('src','/static/img/paypal.png').addClass('btn btn-info').css({'margin':'5%','width':'90%'});
     });
-    $.get('/efforia/pagseguro/cart',{},function(data){
+    $.get('/feedly/pagseguro/cart',{},function(data){
         $('.pagseguro').html(data).removeClass('hidden');
         $('.pagseguro input[name=submit]').attr('src','/static/img/pagseguro.png').addClass('btn btn-success').css({'margin':'5%','width':'90%'});
     });
@@ -256,13 +256,13 @@ $.fn.deleteObject = function(event){
 }
 
 $.fn.verifyDeadlines = function(){
-	$.ajax('efforia/deadlines',{},function(data){});
+	$.ajax('feedly/deadlines',{},function(data){});
 }
 
 $.fn.showMosaic = function(){
 	$('#Espaco').modal('hide');
 	$.ajax({
-		url:'efforia/mosaic',
+		url:'feedly/mosaic',
 		beforeSend:function(){ $.fn.Progress('Carregando seu mosaico inicial');	},
 		success:function(data){
 			$('#Grade').Mosaic(data);
