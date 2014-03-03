@@ -1,7 +1,7 @@
 #
-# This file is part of Efforia Open Source Initiative.
+# This file is part of Feedly Open Source Initiative.
 #
-# Copyright (C) 2011-2014 William Oliveira de Lagos <william@efforia.com.br>
+# Copyright (C) 2011-2014 William Oliveira de Lagos <william@Feedly.com.br>
 #
 # Feedly is free software: you can redistribute it and/or modify
 # it under the terms of the Lesser GNU General Public License as published by
@@ -22,12 +22,12 @@
 
 from django.http import HttpResponse as response
 from feed import Mosaic,Pages
-from main import Efforia
+from core import Feedly
 from payments import PagSeguro,PayPal,Baskets
 from models import Sellable
 
 def profileview(request,name='me'):
-    e = Efforia()
+    e = Feedly()
     if request.method == 'GET':
         return e.profile_view(request,name)
 
@@ -93,7 +93,7 @@ def deadlines(request):
         return m.deadlines(request)
 
 def main(request):
-    e = Efforia()
+    e = Feedly()
     if request.method == 'GET':
         return e.start(request)
     elif request.method == 'POST':

@@ -10,8 +10,8 @@ from datetime import datetime
 
 from demo.views import *
 from demo.models import Product
+from feedly.core import Feedly
 from feedly.models import Basket
-from main import Efforia
 
 try:
     from paypal.standard.forms import PayPalPaymentsForm
@@ -19,7 +19,7 @@ try:
 except ImportError,e:
     pass
 
-class Spreadables(Efforia):
+class Spreadables(Feedly):
     def __init__(self): pass
     def view_spreadable(self,request):
         spread_id = int(request.GET['id'])
@@ -55,7 +55,7 @@ class Spreadables(Efforia):
         for s in sprdd: spreadables.append(Spreadable.objects.filter(id=s.spreaded)[0])
         return self.view_mosaic(request,spreadables)
 
-class Images(Efforia):
+class Images(Feedly):
     def __init__(self): pass
     def view_image(self,request):
         return render(request,'image.jade',{'static_url':settings.STATIC_URL},content_type='text/html')
@@ -78,7 +78,7 @@ class Images(Efforia):
         i.save()
         return response('Image created successfully')
 
-class Spreads(Efforia):
+class Spreads(Feedly):
     def __init__(self): pass
     def start_spreadapp(self,request):
         return render(request,'spreadapp.jade',{'static_url':settings.STATIC_URL},content_type='text/html')
@@ -93,7 +93,7 @@ class Spreads(Efforia):
         self.accumulate_points(1,request)
         return response('Spreadable created successfully')
     
-class Uploads(Efforia):
+class Uploads(Feedly):
     def __init__(self): pass
     def view_upload(self,request):
         return render(request,'content.jade',{'static_url':settings.STATIC_URL},content_type='text/html')
@@ -137,7 +137,7 @@ class Uploads(Efforia):
     def media_chooser(self,request):
         return render(request,'chooser.jade')
 
-class Store(Efforia):
+class Store(Feedly):
     def __init__(self): pass
     def view_product(self,request):
         u = self.current_user(request)

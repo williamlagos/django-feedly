@@ -6,9 +6,6 @@ import sys,os,json
 
 locale = ('Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez')
 
-def user(name): return User.objects.filter(username=name)[0]
-def superuser(): return User.objects.filter(is_superuser=True)[0]
-
 class Spreaded(Model):
     name = CharField(default='!!',max_length=10)
     user = ForeignKey(User,related_name='+')

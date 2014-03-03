@@ -1,17 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from app import Images,Spreads,Uploads
-from content import Spreadables
-from store import Store
-from models import Product,Sellable,user
-from main import Efforia
 from feedly.payments import Baskets
-from projects import Projects,Movements
-from events import Events
-from content import Promoteds
+from promote import Events,Promoteds,Projects,Movements
+from spread import Store,Spreadables,Images,Spreads,Uploads
+from models import Product,Sellable
+from feedly.core import Feedly,user
 
 def efforia_main(request):
-    e = Efforia()
+    e = Feedly()
     if request.method == 'GET':
         return e.start(request)
 

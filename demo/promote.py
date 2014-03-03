@@ -6,10 +6,10 @@ from django.http import HttpResponse as response
 from django.http import HttpResponseRedirect as redirect
 from django.conf import settings
 
-from main import Efforia
+from feedly.core import Feedly
 from demo.models import Sellable,Promoted,Interest,Movement,Project
 
-class Promoteds(Efforia):
+class Promoteds(Feedly):
     def promote_form(self,request):
         return render(request,'promote.jade',{},content_type='text/html')
     def promote(self,request):
@@ -33,7 +33,7 @@ class Promoteds(Efforia):
         feed = list(p); feed.append(o)
         return self.view_mosaic(request,feed)
 
-class Events(Efforia):
+class Events(Feedly):
     def __init__(self): pass
     def event_form(self,request):
         return render(request,'event.jade',{},content_type='text/html')
@@ -89,7 +89,7 @@ class Events(Efforia):
         e.save()
         return response('Event created successfully')
 
-class Projects(Efforia):
+class Projects(Feedly):
     def __init__(self): pass
     def start_promoteapp(self, request):
         return render(request, "createapp.jade", {'static_url':settings.STATIC_URL}, content_type='text/html')
@@ -158,7 +158,7 @@ class Projects(Efforia):
         project.save()
         return redirect('/')
 
-class Movements(Efforia):
+class Movements(Feedly):
     def __init__(self): pass
     def movement_form(self,request):
         Interests = []
