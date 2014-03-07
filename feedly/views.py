@@ -21,11 +21,25 @@
 # -*- coding: utf-8 -*-
 
 from django.http import HttpResponse as response
+from django.views.decorators.cache import never_cache
 from feed import Mosaic,Pages
 from core import Feedly
-from payments import PagSeguro,PayPal,Baskets
+from payments import PagSeguro,PayPal,Baskets,PayPalCartridge
 from models import Sellable
+import logging, urlparse
 
+logger = logging.getLogger("feedly.views")
+
+@never_cache
+def paypal_redirect(request, order_id):
+    p = PayPalCartridge()
+    return p.paypal_redirect(request,order_id)
+
+@never_cache
+def paypal_execute(request, template="shop/payment_confirmation.html"):
+    p = PayPalCartridge()
+    return p.paypal_execute(request,template)
+    
 def profileview(request,name='me'):
     e = Feedly()
     if request.method == 'GET':

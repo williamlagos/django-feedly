@@ -20,19 +20,31 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import logging, urlparse
 from django.shortcuts import render 
 from django.http import HttpResponse as response
 from django.conf import settings
 from django.template import Context,Template
 from django import forms
+from django.http import Http404,HttpResponse
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.translation import ugettext as _
 from models import Sellable,Basket,user
 from forms import BasketForm
 from feed import Mosaic
+from hooks import paypal_api
+
+logger = logging.getLogger("feedly.views")
 
 try:
     from django_pagseguro.pagseguro import CarrinhoPagSeguro,ItemPagSeguro
     from paypal.standard.forms import PayPalPaymentsForm
     from paypal.standard.widgets import ValueHiddenInput, ReservedValueHiddenInput
+    from mezzanine.utils.views import render
+    from mezzanine.conf import settings
+    from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
+    import paypalrestsdk
+    from paypalrestsdk import Payment
 except ImportError,e:
     pass
 
@@ -134,3 +146,47 @@ class PayPal(Baskets):
         t = Template('{{form}}')
         c = Context({'form':form_paypal.render()})
         return response(t.render(c))
+
+class PayPalCartridge():
+    def __init__(self):
+        paypal_api()
+    def paypal_redirect(self, request, order_id):
+        logger.debug("feedly.views.paypal_redirect(%s)" % order_id)
+        lookup = {"id": order_id}
+        if not request.user.is_authenticated():
+            lookup["key"] = request.session.session_key
+        elif not request.user.is_staff:
+            lookup["user_id"] = request.user.id
+        order = get_object_or_404(Order, **lookup)
+
+        payment = paypalrestsdk.Payment.find(order.transaction_id)
+
+        for link in payment.links:
+            if link.method == "REDIRECT":
+                redirect_url = link.href
+                url = urlparse.urlparse(link.href)
+                params = urlparse.parse_qs(url.query)
+                redirect_token = params['token'][0]
+                order.paypal_redirect_token = redirect_token
+                order.save()
+
+        logger.debug("redirect url : %s" % redirect_url)
+        return redirect(redirect_url)
+    def paypal_execute(self, request, template="shop/payment_confirmation.html"):    
+        token = request.GET['token']
+        payer_id = request.GET['PayerID']
+        logger.debug("feedly.views.paypal_execute(token=%s,payer_id=%s)" % (token,payer_id))
+
+        order = get_object_or_404(Order, paypal_redirect_token=token)
+
+        payment = Payment.find(order.transaction_id)
+        payment.execute({ "payer_id": payer_id })
+
+        # Pago, falta enviar
+        order.status = 3
+        order.save()
+
+        context = { "order" : order }
+
+        response = render(request, template, context)
+        return response
