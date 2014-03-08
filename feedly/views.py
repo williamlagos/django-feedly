@@ -24,21 +24,21 @@ from django.http import HttpResponse as response
 from django.views.decorators.cache import never_cache
 from feed import Mosaic,Pages
 from core import Feedly
-from payments import PagSeguro,PayPal,Baskets,PayPalCartridge
+from payments import PagSeguro,PayPal,Baskets,Cartridge
 from models import Sellable
 import logging, urlparse
 
 logger = logging.getLogger("feedly.views")
 
 @never_cache
-def paypal_redirect(request, order_id):
-    p = PayPalCartridge()
-    return p.paypal_redirect(request,order_id)
+def payment_redirect(request, order_id):
+    p = Cartridge()
+    return p.payment_redirect(request,order_id)
 
 @never_cache
-def paypal_execute(request, template="shop/payment_confirmation.html"):
-    p = PayPalCartridge()
-    return p.paypal_execute(request,template)
+def payment_execute(request, template="shop/payment_confirmation.html"):
+    p = Cartridge()
+    return p.payment_execute(request,template)
     
 def profileview(request,name='me'):
     e = Feedly()

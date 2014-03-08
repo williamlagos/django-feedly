@@ -22,11 +22,15 @@
 import locale,paypalrestsdk,pagseguro,os
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ImproperlyConfigured
+from django.http import HttpResponse as response
+from django.template import Template,Context
+from django.http import HttpResponseRedirect as redirect
 
 try:
 	from mezzanine.conf import settings
 	from cartridge.shop.forms import OrderForm
 	from cartridge.shop.models import Cart
+	from cartridge.shop.checkout import CheckoutError
 except ImportError,e:
 	pass
 
@@ -55,21 +59,12 @@ def paypal_api():
 	os.environ['PAYPAL_CLIENT_SECRET'] = PAYPAL_CLIENT_SECRET
 
 def pagseguro_api():
-	pass
+	api = pagseguro.PagSeguro(email=settings.PAGSEGURO_EMAIL_COBRANCA, 
+				  			 token=settings.PAGSEGURO_TOKEN)
+	return api
 
-def paypal_payment_handler(request, order_form, order):
+def paypal_payment(request,items,price,currency):
 	paypal_api()
-	data = order_form.cleaned_data
-	print data
-	print order
-	cart = Cart.objects.from_request(request)
-	order.total = cart.total_price()
-	print cart.total_price()
-	print cart.total_quantity()
-	locale.setlocale(locale.LC_ALL, settings.SHOP_CURRENCY_LOCALE)
-	currency = locale.localeconv()
-	currency_code = currency['int_curr_symbol'][0:3]
- 
 	server_host = request.get_host()
 	payment = paypalrestsdk.Payment({
 		"intent": "sale",
@@ -81,9 +76,10 @@ def paypal_payment_handler(request, order_form, order):
 			"cancel_url" : "http://%s/feedly/cancel" % server_host
 		},
 		"transactions": [{
+			"item_list":{ "items":items	},
 			"amount": {
-				"total": str(order.total),
-				"currency": currency_code
+				"total": str(price),
+				"currency": currency
 			},
 			"description": "Compra de Produtos na loja."
 		}]
@@ -91,11 +87,36 @@ def paypal_payment_handler(request, order_form, order):
 	if payment.create(): return payment.id
 	else: raise CheckoutError(payment.error)
 
-def pagseguro_payment_handler(request, order_form, order):
-	pagseguro_api()
-	print order_form
-	print order
-	return response('Hello World!')
-
 def multiple_payment_handler(request, order_form, order):
-	pass
+	data = order_form.cleaned_data
+	cart = Cart.objects.from_request(request)
+	currency = settings.SHOP_CURRENCY
+	cart_items = []
+	for item in cart.items.all():
+		cart_items.append({
+			"name":item.description,
+			"sku":item.sku,
+			"price":str(item.unit_price),
+			"currency":currency,
+			"quantity":item.quantity
+		})
+	price = cart.total_price()
+	if '1' in data['pay_option']:
+		return paypal_payment(request,cart_items,price,currency)
+	elif '2' in data['pay_option']:
+		return pagseguro_payment(request,cart_items,price,order)
+
+def pagseguro_payment(request,items,price,order):
+	server_host = request.get_host()
+	payment = pagseguro_api()
+	for product in items:
+		payment.add_item(id=product['sku'], 
+        				 description=product['name'], 
+        				 amount=product['price'], 
+        				 quantity=product['quantity'])
+	server_host = 'www.efforia.com.br'
+	payment.redirect_url = "http://%s/feedly/execute" % server_host
+	response = payment.checkout()
+	order.pagseguro_redirect = response.payment_url
+	order.save()
+	return response.code
