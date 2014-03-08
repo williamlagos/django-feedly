@@ -1,4 +1,4 @@
-from django.forms import Form,CharField
+from django.forms import Form,CharField,ChoiceField,RadioSelect
 
 class BasketForm(Form):
     business = CharField(max_length=100)
@@ -16,9 +16,19 @@ except ImportError,e:
 		pass
 
 class ExternalPaymentOrderForm(OrderForm):
+	GATEWAYS = (
+       (1, "PayPal"),
+       (2, "PagSeguro"), 
+   	)
+   	pay_option = ChoiceField(widget=RadioSelect,choices=GATEWAYS)
 	def __init__(self,*args,**kwargs):
 		super(ExternalPaymentOrderForm,self).__init__(*args,**kwargs)
 		del self.fields['card_expiry_year']
 
-for field in ('card_name', 'card_type', 'card_number', 'card_expiry_month', 'card_ccv'):
+excluded = ('card_name','card_type','card_number','card_expiry_month','card_ccv',
+			'billing_detail_street','billing_detail_city','billing_detail_state',
+			'billing_detail_country','shipping_detail_street','shipping_detail_city',
+			'shipping_detail_state','shipping_detail_country')
+
+for field in excluded:
 	del ExternalPaymentOrderForm.base_fields[field]

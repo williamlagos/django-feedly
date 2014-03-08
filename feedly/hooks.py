@@ -19,13 +19,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import locale,paypalrestsdk,os
+import locale,paypalrestsdk,pagseguro,os
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ImproperlyConfigured
 
 try:
 	from mezzanine.conf import settings
 	from cartridge.shop.forms import OrderForm
+	from cartridge.shop.models import Cart
 except ImportError,e:
 	pass
 
@@ -53,9 +54,18 @@ def paypal_api():
 	os.environ['PAYPAL_CLIENT_ID'] = PAYPAL_CLIENT_ID
 	os.environ['PAYPAL_CLIENT_SECRET'] = PAYPAL_CLIENT_SECRET
 
+def pagseguro_api():
+	pass
+
 def paypal_payment_handler(request, order_form, order):
 	paypal_api()
 	data = order_form.cleaned_data
+	print data
+	print order
+	cart = Cart.objects.from_request(request)
+	order.total = cart.total_price()
+	print cart.total_price()
+	print cart.total_quantity()
 	locale.setlocale(locale.LC_ALL, settings.SHOP_CURRENCY_LOCALE)
 	currency = locale.localeconv()
 	currency_code = currency['int_curr_symbol'][0:3]
@@ -80,3 +90,12 @@ def paypal_payment_handler(request, order_form, order):
 	})
 	if payment.create(): return payment.id
 	else: raise CheckoutError(payment.error)
+
+def pagseguro_payment_handler(request, order_form, order):
+	pagseguro_api()
+	print order_form
+	print order
+	return response('Hello World!')
+
+def multiple_payment_handler(request, order_form, order):
+	pass
