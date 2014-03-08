@@ -36,13 +36,11 @@ from hooks import paypal_api
 
 logger = logging.getLogger("feedly.views")
 
-from paypal.standard.forms import PayPalPaymentsForm
-from paypal.standard.widgets import ValueHiddenInput, ReservedValueHiddenInput
 from mezzanine.utils.views import render
 from mezzanine.conf import settings
 from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
-import paypalrestsdk
 from paypalrestsdk import Payment
+import paypalrestsdk
 
 class Baskets(Mosaic):
     def view_items(self,request):
