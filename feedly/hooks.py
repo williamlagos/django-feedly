@@ -114,7 +114,6 @@ def pagseguro_payment(request,items,price,order):
         				 description=product['name'], 
         				 amount=product['price'], 
         				 quantity=product['quantity'])
-	server_host = 'www.efforia.com.br'
 	payment.redirect_url = "http://%s/feedly/execute" % server_host
 	response = payment.checkout()
 	order.pagseguro_redirect = response.payment_url

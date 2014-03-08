@@ -34,6 +34,8 @@ from forms import BasketForm
 from feed import Mosaic
 from hooks import paypal_api
 
+from cartridge.shop.models import Cart,Order
+
 logger = logging.getLogger("feedly.views")
 
 try:
@@ -169,7 +171,7 @@ class Cartridge():
         elif not request.user.is_staff:
             lookup["user_id"] = request.user.id
         order = get_object_or_404(Order, **lookup)
-        is_pagseguro = order.pagseguro_redirect
+        is_pagseguro = order.pagseguro_redirect 
         if is_pagseguro is not None: return redirect(str(is_pagseguro))
         else: return self.paypal_redirect(request,order)
     def payment_execute(self, request, template="shop/payment_confirmation.html"):    
