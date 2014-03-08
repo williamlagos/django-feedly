@@ -34,21 +34,15 @@ from forms import BasketForm
 from feed import Mosaic
 from hooks import paypal_api
 
-from cartridge.shop.models import Cart,Order
-
 logger = logging.getLogger("feedly.views")
 
-try:
-    from django_pagseguro.pagseguro import CarrinhoPagSeguro,ItemPagSeguro
-    from paypal.standard.forms import PayPalPaymentsForm
-    from paypal.standard.widgets import ValueHiddenInput, ReservedValueHiddenInput
-    from mezzanine.utils.views import render
-    from mezzanine.conf import settings
-    from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
-    import paypalrestsdk
-    from paypalrestsdk import Payment
-except ImportError,e:
-    pass
+from paypal.standard.forms import PayPalPaymentsForm
+from paypal.standard.widgets import ValueHiddenInput, ReservedValueHiddenInput
+from mezzanine.utils.views import render
+from mezzanine.conf import settings
+from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
+import paypalrestsdk
+from paypalrestsdk import Payment
 
 class Baskets(Mosaic):
     def view_items(self,request):
