@@ -88,6 +88,7 @@ def paypal_payment(request,items,price,currency):
 	else: raise CheckoutError(payment.error)
 
 def multiple_payment_handler(request, order_form, order):
+	print 'Pagamento'
 	data = order_form.cleaned_data
 	cart = Cart.objects.from_request(request)
 	currency = settings.SHOP_CURRENCY
