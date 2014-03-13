@@ -88,10 +88,8 @@ def paypal_payment(request,items,price,currency):
 	else: raise CheckoutError(payment.error)
 
 def multiple_payment_handler(request, order_form, order):
-	print request
-	print order_form
-	print order
 	data = order_form.cleaned_data
+	shipping = order.shipping_total
 	cart = Cart.objects.from_request(request)
 	currency = settings.SHOP_CURRENCY
 	cart_items = []
@@ -103,10 +101,18 @@ def multiple_payment_handler(request, order_form, order):
 			"currency":currency,
 			"quantity":item.quantity
 		})
-	price = cart.total_price()
-	if '1' in data['pay_option']:
+	cart_items.append({
+		"name": "Frete via SEDEX",
+		"sku":"1",
+		"price":str(shipping),
+		"currency":currency,
+		"quantity":1
+	})
+	price = cart.total_price()+shipping
+
+	if '1' in data['card_pay_option']:
 		return paypal_payment(request,cart_items,price,currency)
-	elif '2' in data['pay_option']:
+	elif '2' in data['card_pay_option']:
 		return pagseguro_payment(request,cart_items,price,order)
 
 def pagseguro_payment(request,items,price,order):
@@ -117,6 +123,8 @@ def pagseguro_payment(request,items,price,order):
         				 description=product['name'], 
         				 amount=product['price'], 
         				 quantity=product['quantity'])
+	# Fixes problems in localhost development environment for PagSeguro checkout
+	if 'localhost' in server_host or 'ubuntu' in server_host: server_host = settings.DEFAULT_HOST
 	payment.redirect_url = "http://%s/feedly/execute" % server_host
 	response = payment.checkout()
 	order.pagseguro_redirect = response.payment_url
