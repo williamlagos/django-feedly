@@ -1,4 +1,25 @@
-from django.forms import Form,CharField,ChoiceField,RadioSelect
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
+#
+# This file is part of Efforia Open Source Initiative.
+#
+# Copyright (C) 2011-2014 William Oliveira de Lagos <william@efforia.com.br>
+#
+# Feedly is free software: you can redistribute it and/or modify
+# it under the terms of the Lesser GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Feedly is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Feedly. If not, see <http://www.gnu.org/licenses/>.
+#
+
+from django.forms import Form,CharField
 
 class BasketForm(Form):
     business = CharField(max_length=100)
@@ -8,28 +29,3 @@ class BasketForm(Form):
     currency_code = CharField(max_length=10)
     def render(self): return ''
     def form(self): return ''
-
-try:
-	from cartridge.shop.forms import OrderForm
-except ImportError,e:
-	class OrderForm(Form):
-		pass
-
-class ExternalPaymentOrderForm(OrderForm):
-	GATEWAYS = (
-       (1, "PayPal"),
-       (2, "PagSeguro"), 
-   	)
-   	number_complement = CharField(max_length=100)
-   	card_pay_option = ChoiceField(widget=RadioSelect,choices=GATEWAYS)
-	def __init__(self,*args,**kwargs):
-		super(ExternalPaymentOrderForm,self).__init__(*args,**kwargs)
-		del self.fields['card_expiry_year']
-
-excluded = ('card_name','card_type','card_number','card_expiry_month','card_ccv',
-			'billing_detail_street','billing_detail_city','billing_detail_state',
-			'billing_detail_country','shipping_detail_street','shipping_detail_city',
-			'shipping_detail_state','shipping_detail_country')
-
-for field in excluded:
-	del ExternalPaymentOrderForm.base_fields[field]

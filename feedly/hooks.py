@@ -93,7 +93,7 @@ def multiple_payment_handler(request, order_form, order):
 	shipping = order.shipping_total
 	code = CorreiosCode()
 	shipping_data = code.consulta(order.billing_detail_postcode)[0]
-	order.billing_detail_street  = '%s %s' % (shipping_data['Logradouro'],data['number_complement'])
+	order.billing_detail_street  = '%s %s' % (shipping_data['Logradouro'],data['billing_detail_complement'])
 	order.billing_detail_city    = shipping_data['Localidade']
 	order.billing_detail_state   = shipping_data['UF']
 	order.billing_detail_country = settings.STORE_COUNTRY
