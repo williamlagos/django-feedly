@@ -27,6 +27,7 @@ from django.template import Template,Context
 from django.http import HttpResponseRedirect as redirect
 
 try:
+	from shipping.codes import CorreiosCode
 	from mezzanine.conf import settings
 	from cartridge.shop.forms import OrderForm
 	from cartridge.shop.models import Cart
@@ -90,6 +91,13 @@ def paypal_payment(request,items,price,currency):
 def multiple_payment_handler(request, order_form, order):
 	data = order_form.cleaned_data
 	shipping = order.shipping_total
+	code = CorreiosCode()
+	shipping_data = code.consulta(order.billing_detail_postcode)[0]
+	order.billing_detail_street  = '%s %s' % (shipping_data['Logradouro'],data['number_complement'])
+	order.billing_detail_city    = shipping_data['Localidade']
+	order.billing_detail_state   = shipping_data['UF']
+	order.billing_detail_country = settings.STORE_COUNTRY
+	order.save()
 	cart = Cart.objects.from_request(request)
 	currency = settings.SHOP_CURRENCY
 	cart_items = []

@@ -20,6 +20,7 @@ class ExternalPaymentOrderForm(OrderForm):
        (1, "PayPal"),
        (2, "PagSeguro"), 
    	)
+   	number_complement = CharField(max_length=100)
    	card_pay_option = ChoiceField(widget=RadioSelect,choices=GATEWAYS)
 	def __init__(self,*args,**kwargs):
 		super(ExternalPaymentOrderForm,self).__init__(*args,**kwargs)

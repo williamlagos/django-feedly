@@ -8,7 +8,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-feedly',
-    version='0.6.1',
+    version='0.6.2',
     packages=['feedly'],
     include_package_data=True,
     license='LGPLv3 License',
