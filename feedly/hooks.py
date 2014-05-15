@@ -28,6 +28,7 @@ from django.http import HttpResponseRedirect as redirect
 
 try:
 	from shipping.codes import CorreiosCode
+	from shipping.models import DeliverableProperty
 	from mezzanine.conf import settings
 	from cartridge.shop.forms import OrderForm
 	from cartridge.shop.models import Cart
@@ -53,7 +54,6 @@ def paypal_api():
 		client_id = PAYPAL_CLIENT_ID,
 		client_secret = PAYPAL_CLIENT_SECRET
 	)
-	access_token = api.get_token()
 
 	os.environ['PAYPAL_MODE'] = mode # sandbox or live
 	os.environ['PAYPAL_CLIENT_ID'] = PAYPAL_CLIENT_ID
@@ -101,7 +101,10 @@ def multiple_payment_handler(request, order_form, order):
 	cart = Cart.objects.from_request(request)
 	currency = settings.SHOP_CURRENCY
 	cart_items = []
+	has_shipping = False
 	for item in cart.items.all():
+		quantity = len(DeliverableProperty.objects.filter(sku=item.sku))
+		if quantity > 0: has_shipping = True
 		cart_items.append({
 			"name":item.description,
 			"sku":item.sku,
@@ -109,13 +112,14 @@ def multiple_payment_handler(request, order_form, order):
 			"currency":currency,
 			"quantity":item.quantity
 		})
-	cart_items.append({
-		"name": "Frete via SEDEX",
-		"sku":"1",
-		"price":str(shipping),
-		"currency":currency,
-		"quantity":1
-	})
+	if has_shipping:
+		cart_items.append({
+			"name": "Frete via SEDEX",
+			"sku":"1",
+			"price":str(shipping),
+			"currency":currency,
+			"quantity":1
+		})
 	price = cart.total_price()+shipping
 
 	if '1' in data['card_pay_option']:
