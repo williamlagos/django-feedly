@@ -21,7 +21,7 @@
 # -*- coding: utf-8 -*-
 
 import logging, urlparse
-from django.shortcuts import render 
+from django.shortcuts import render
 from django.http import HttpResponse as response
 from django.conf import settings
 from django.template import Context,Template
@@ -36,11 +36,16 @@ from hooks import paypal_api
 
 logger = logging.getLogger("feedly.views")
 
-from mezzanine.utils.views import render
-from mezzanine.conf import settings
-from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
-from paypalrestsdk import Payment
-import paypalrestsdk
+# Optional dependencies
+
+try:
+    from mezzanine.utils.views import render
+    from mezzanine.conf import settings
+    from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
+    from paypalrestsdk import Payment
+    import paypalrestsdk
+except ImportError,e:
+    logging.info("Extension modules deactivated: they could not be found.")
 
 class Baskets(Mosaic):
     def view_items(self,request):
@@ -60,14 +65,14 @@ class Baskets(Mosaic):
                 for i in range(int(request.REQUEST['qty'])-1):
                     s = Sellable(user=u,name=token,value=value,sellid=prodid,visual=visual); s.save()
         exists = Basket.objects.all().filter(user=u,product=prodid)
-        if not len(exists): 
+        if not len(exists):
             basket = Basket(user=u,product=prodid)
             basket.save()
         return self.view_items(request)
     def process_cart(self,request):
         u = self.current_user(request); cart = []
         basket = list(Basket.objects.filter(user=u))
-        for b in basket: 
+        for b in basket:
             sellables = Sellable.objects.filter(sellid=b.product)
             for s in sellables:
                 prod = {}
@@ -79,7 +84,7 @@ class Baskets(Mosaic):
     def clean_basket(self,request):
         u = self.current_user(request); cart = []
         basket = list(Basket.objects.filter(user=u))
-        for b in basket: 
+        for b in basket:
             Sellable.objects.filter(sellid=b.product).delete()
             b.delete()
         return response("Basket cleaned successfully")
@@ -133,7 +138,7 @@ class PayPal(Baskets):
                 form_paypal.fields['amount_1'] = forms.IntegerField(widget=ValueHiddenInput(),initial=value)
                 form_paypal.fields['item_name_1'] = forms.CharField(widget=ValueHiddenInput(),initial=product)
                 form_paypal.fields['quantity_1'] = forms.CharField(widget=ValueHiddenInput(),initial=str(qty))
-            form_paypal.fields['cmd'] = forms.CharField(widget=ValueHiddenInput(),initial=option)        
+            form_paypal.fields['cmd'] = forms.CharField(widget=ValueHiddenInput(),initial=option)
             form_paypal.fields['upload'] = forms.CharField(widget=ValueHiddenInput(),initial='1')
         except (NameError,ImportError) as e:
             form_paypal = BasketForm(initial=paypal)
@@ -163,10 +168,10 @@ class Cartridge():
         elif not request.user.is_staff:
             lookup["user_id"] = request.user.id
         order = get_object_or_404(Order, **lookup)
-        is_pagseguro = order.pagseguro_redirect 
+        is_pagseguro = order.pagseguro_redirect
         if is_pagseguro is not None: return redirect(str(is_pagseguro))
         else: return self.paypal_redirect(request,order)
-    def payment_execute(self, request, template="shop/payment_confirmation.html"):    
+    def payment_execute(self, request, template="shop/payment_confirmation.html"):
         paypal_api()
         token = request.GET['token']
         payer_id = request.GET['PayerID']

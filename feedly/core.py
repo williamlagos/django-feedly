@@ -17,11 +17,11 @@ class Feedly(Mosaic):
         return permissions
     def start(self,request):
         # Painel do usuario
-        u = user('efforia'); 
+        u = user('efforia');
         permissions = self.verify_permissions(request)
         actions = settings.EFFORIA_ACTIONS; apps = []
         for a in settings.EFFORIA_APPS: apps.append(actions[a])
-        return render(request,'interface.html',{'static_url':settings.STATIC_URL,
+        return render(request,'index.html',{'static_url':settings.STATIC_URL,
                                             'user':user('efforia'),'perm':permissions,
                                             'name':'%s %s' % (u.first_name,u.last_name),'apps':apps
                                             },content_type='text/html')
@@ -74,12 +74,12 @@ class Feedly(Mosaic):
     def authenticate(self,username,password):
         exists = User.objects.filter(username=username)
         if exists:
-            if exists[0].check_password(password): 
+            if exists[0].check_password(password):
                 return exists
         else: return None
     def authenticated(self):
         name = self.get_current_user()
-        if not name: 
+        if not name:
             #self.redirect('login')
             self.render('templates/enter.html',STATIC_URL=settings.STATIC_URL)
             return False

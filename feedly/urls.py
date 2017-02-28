@@ -17,20 +17,21 @@
 # along with Feedly. If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.conf.urls import patterns,url,include
+from django.conf.urls import url,include
+from feedly.views import *
 
-urlpatterns = patterns('feedly.views',    
-    url("^pay/(?P<order_id>\d+)/$", "payment_redirect", name="payment_redirect"),
-    url("^execute", "payment_execute" , name="payment_execute"),
-    (r'^mosaic','mosaic'),
-    (r'^basketclean','basketclean'),
-    (r'^basket','basket'),
-    (r'^pagseguro/cart','pagsegurocart'),
-    (r'^pagseguro','pagseguro'),
-    (r'^paypal/cart','paypalcart'),
-    (r'^paypal','paypal'),
-    (r'^pages','page'),
-    (r'^pageview','pageview'),
-    (r'^pageedit','pageedit'),
-    (r'^deadlines','deadlines'),
-)
+urlpatterns = [
+    url("^pay/(?P<order_id>\d+)/$", payment_redirect, name="payment_redirect"),
+    url("^execute", payment_execute, name="payment_execute"),
+    url(r'^mosaic', mosaic),
+    url(r'^basketclean', basketclean),
+    url(r'^basket', basket),
+    url(r'^pagseguro/cart', pagsegurocart),
+    url(r'^pagseguro', pagseguro),
+    url(r'^paypal/cart', paypalcart),
+    url(r'^paypal', paypal),
+    url(r'^pages', page),
+    url(r'^pageview', pageview),
+    url(r'^pageedit', pageedit),
+    url(r'^deadlines', deadlines),
+]

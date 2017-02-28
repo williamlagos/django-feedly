@@ -21,6 +21,7 @@ from django.db.models import *
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.template import Context,Template
+from django.utils.timezone import now
 from datetime import date
 
 locale = settings.LOCALE_DATE
@@ -29,16 +30,16 @@ def user(name): return User.objects.filter(username=name)[0]
 def superuser(): return User.objects.filter(is_superuser=True)[0]
 
 class Profile(Model):
-    user = ForeignKey(User,related_name='+',unique=True)
+    user = ForeignKey(User,related_name='+')
     coins = IntegerField(default=0)
     visual = CharField(default="",max_length=100)
     career = CharField(default='',max_length=50)
-    birthday = DateTimeField(default=date.today())
+    birthday = DateTimeField(default=now)
     google_token = TextField(default="",max_length=120)
     twitter_token = TextField(default="",max_length=120)
     facebook_token = TextField(default="",max_length=120)
     bio = TextField(default='',max_length=140)
-    date = DateTimeField(default=date.today(),auto_now_add=True)
+    date = DateTimeField(auto_now_add=True)
     def years_old(self): return datetime.timedelta(self.birthday,date.today)
     def token(self): return ''
     def get_username(self): return self.user.username
@@ -81,7 +82,7 @@ class Page(Model):
     def token(self): return self.name[:2]
     def name_trimmed(self): return self.name[2:]
     def month(self): return locale[self.date.month-1]
-    
+
 class Basket(Model):
     name = CharField(default='++',max_length=2)
     user = ForeignKey(User,related_name='+')
@@ -101,7 +102,7 @@ class Sellable(Model):
     value = FloatField(default=1.00)
     visual = CharField(default='',max_length=150)
     sellid = IntegerField(default=1)
-    date = DateTimeField(default=date.today(),auto_now_add=True)
+    date = DateTimeField(auto_now_add=True)
     def token(self): return '$$'
     def name_trimmed(self): return self.name
     def type_object(self): return self.name[:2]

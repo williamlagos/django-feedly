@@ -19,7 +19,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import locale,paypalrestsdk,pagseguro,os
+import locale,logging,os
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse as response
@@ -27,6 +27,7 @@ from django.template import Template,Context
 from django.http import HttpResponseRedirect as redirect
 
 try:
+	import paypalrestsdk,pagseguro
 	from shipping.codes import CorreiosCode
 	from shipping.models import DeliverableProperty
 	from mezzanine.conf import settings
@@ -34,7 +35,7 @@ try:
 	from cartridge.shop.models import Cart
 	from cartridge.shop.checkout import CheckoutError
 except ImportError,e:
-	pass
+	logging.info("Extension modules deactivated: they could not be found.")
 
 def paypal_api():
 	try:
@@ -60,7 +61,7 @@ def paypal_api():
 	os.environ['PAYPAL_CLIENT_SECRET'] = PAYPAL_CLIENT_SECRET
 
 def pagseguro_api():
-	api = pagseguro.PagSeguro(email=settings.PAGSEGURO_EMAIL_COBRANCA, 
+	api = pagseguro.PagSeguro(email=settings.PAGSEGURO_EMAIL_COBRANCA,
 				  			 token=settings.PAGSEGURO_TOKEN)
 	return api
 
@@ -131,9 +132,9 @@ def pagseguro_payment(request,items,price,order):
 	server_host = request.get_host()
 	payment = pagseguro_api()
 	for product in items:
-		payment.add_item(id=product['sku'], 
-        				 description=product['name'], 
-        				 amount=product['price'], 
+		payment.add_item(id=product['sku'],
+        				 description=product['name'],
+        				 amount=product['price'],
         				 quantity=product['quantity'])
 	# Fixes problems in localhost development environment for PagSeguro checkout
 	if 'localhost' in server_host or 'ubuntu' in server_host: server_host = settings.DEFAULT_HOST
