@@ -30,7 +30,7 @@ def user(name): return User.objects.filter(username=name)[0]
 def superuser(): return User.objects.filter(is_superuser=True)[0]
 
 class Profile(Model):
-    user = ForeignKey(User,related_name='+')
+    user = ForeignKey(User,related_name='+', on_delete=CASCADE)
     coins = IntegerField(default=0)
     visual = CharField(default="",max_length=100)
     career = CharField(default='',max_length=50)
@@ -77,7 +77,7 @@ class Profile(Model):
 class Page(Model):
     name = CharField(default='!#',max_length=50)
     content = TextField(default='')
-    user = ForeignKey(User,related_name='+')
+    user = ForeignKey(User,related_name='+', on_delete=CASCADE)
     date = DateTimeField(auto_now_add=True)
     def token(self): return self.name[:2]
     def name_trimmed(self): return self.name[2:]
@@ -85,7 +85,7 @@ class Page(Model):
 
 class Basket(Model):
     name = CharField(default='++',max_length=2)
-    user = ForeignKey(User,related_name='+')
+    user = ForeignKey(User,related_name='+', on_delete=CASCADE)
     deliverable = BooleanField(default=False)
     product = IntegerField(default=1)
     date = DateTimeField(auto_now_add=True)
@@ -96,7 +96,7 @@ class Basket(Model):
 
 class Sellable(Model):
     name = CharField(default='$$',max_length=100)
-    user = ForeignKey(User,related_name='+')
+    user = ForeignKey(User,related_name='+', on_delete=CASCADE)
     paid = BooleanField(default=False)
     returnable = BooleanField(default=False)
     value = FloatField(default=1.00)
