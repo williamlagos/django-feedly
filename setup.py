@@ -17,7 +17,7 @@ setup(
     long_description_content_type='text/x-rst',
     url='https://williamlagos.github.io/',
     author='William Oliveira de Lagos',
-    author_email='william@efforia.com.br',
+    author_email='william.lagos@icloud.com',
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
