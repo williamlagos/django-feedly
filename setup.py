@@ -8,13 +8,14 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-feedly',
-    version='0.6.6',
+    version='0.6.7',
     packages=['feedly'],
     include_package_data=True,
     license='LGPLv3 License',
     description='A Django app to create list and grid-based feeds.',
     long_description=README,
-    url='http://www.efforia.com.br/opensource/',
+    long_description_content_type='text/x-rst',
+    url='https://williamlagos.github.io/',
     author='William Oliveira de Lagos',
     author_email='william@efforia.com.br',
     classifiers=[

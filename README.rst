@@ -1,6 +1,6 @@
-=====
+======
 Feedly
-=====
+======
 
 Feedly is a Django app to create list and grid-based feeds. The
 feeds created with this app can have social and e-commerce aspects.
