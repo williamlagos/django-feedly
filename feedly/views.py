@@ -22,11 +22,11 @@
 
 from django.http import HttpResponse as response
 from django.views.decorators.cache import never_cache
-from feed import Mosaic,Pages
-from core import Feedly
-from payments import PagSeguro,PayPal,Baskets,Cartridge
-from models import Sellable
-import logging, urlparse
+from .feed import Mosaic,Pages
+from .core import Feedly
+from .payments import PagSeguro,PayPal,Baskets,Cartridge
+from .models import Sellable
+import logging, urllib.parse
 
 logger = logging.getLogger("feedly.views")
 

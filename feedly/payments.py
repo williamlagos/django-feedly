@@ -20,7 +20,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import logging, urlparse
+import logging, urllib.parse
 from django.shortcuts import render
 from django.http import HttpResponse as response
 from django.conf import settings
@@ -29,10 +29,10 @@ from django import forms
 from django.http import Http404,HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext as _
-from models import Sellable,Basket,user
-from forms import BasketForm
-from feed import Mosaic
-from hooks import paypal_api
+from .models import Sellable,Basket,user
+from .forms import BasketForm
+from .feed import Mosaic
+from .hooks import paypal_api
 
 logger = logging.getLogger("feedly.views")
 
@@ -44,7 +44,7 @@ try:
     from cartridge.shop.models import Product, ProductVariation, Order, OrderItem
     from paypalrestsdk import Payment
     import paypalrestsdk
-except ImportError,e:
+except ImportError as e:
     logging.info("Extension modules deactivated: they could not be found.")
 
 class Baskets(Mosaic):
@@ -93,7 +93,7 @@ class Baskets(Mosaic):
 
 class PagSeguro(Baskets):
     def process(self,request,cart=None):
-        for k,v in request.REQUEST.iteritems():
+        for k,v in request.REQUEST.items():
             if 'product' in k: product = v
             elif 'value' in k: value = float(v)
             elif 'qty' in k: qty = int(v)
@@ -113,7 +113,7 @@ class PagSeguro(Baskets):
 
 class PayPal(Baskets):
     def process(self,request,cart=None):
-        for k,v in request.REQUEST.iteritems():
+        for k,v in request.REQUEST.items():
             if 'product' in k: product = v
             elif 'value' in k: value = float(v)
             elif 'qty' in k: qty = int(v)
@@ -153,8 +153,8 @@ class Cartridge():
         for link in payment.links:
             if link.method == "REDIRECT":
                 redirect_url = link.href
-                url = urlparse.urlparse(link.href)
-                params = urlparse.parse_qs(url.query)
+                url = urllib.parse.urlparse(link.href)
+                params = urllib.parse.parse_qs(url.query)
                 redirect_token = params['token'][0]
                 order.paypal_redirect_token = redirect_token
                 order.save()

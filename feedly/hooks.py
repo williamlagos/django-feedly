@@ -34,7 +34,7 @@ try:
 	from cartridge.shop.forms import OrderForm
 	from cartridge.shop.models import Cart
 	from cartridge.shop.checkout import CheckoutError
-except ImportError,e:
+except ImportError as e:
 	logging.info("Extension modules deactivated: they could not be found.")
 
 def paypal_api():

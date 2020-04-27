@@ -25,7 +25,7 @@ from django.shortcuts import render
 from django.contrib.sessions.backends.cached_db import SessionStore
 from pure_pagination import Paginator,PageNotAnInteger,EmptyPage
 from difflib import SequenceMatcher
-from models import *
+from .models import *
 
 class Activity:
     def __init__(self,user,app):
@@ -134,7 +134,7 @@ class Pages:
     def view_page(self,request):
         return render(request,'page.jade',{},content_type='text/html')
     def create_page(self,request):
-        print request.POST
+        print(request.POST)
         c = request.POST['content']
         t = request.POST['title']
         u = self.current_user(request)
@@ -151,7 +151,7 @@ class Pages:
     def save_page(self,request):
         page_id = request.POST['id']
         p = Page.objects.filter(id=page_id)[0]
-        for k,v in request.POST.items():
+        for k,v in list(request.POST.items()):
             if 'content' in k:
                 if len(v) > 0: p.content = v
             elif 'title' in k:
@@ -208,7 +208,7 @@ class Pages:
     def view_page(self,request):
         return render(request,'page.jade',{},content_type='text/html')
     def create_page(self,request):
-        print request.POST
+        print(request.POST)
         c = request.POST['content']
         t = request.POST['title']
         u = self.current_user(request)
@@ -225,7 +225,7 @@ class Pages:
     def save_page(self,request):
         page_id = request.POST['id']
         p = Page.objects.filter(id=page_id)[0]
-        for k,v in request.POST.items():
+        for k,v in list(request.POST.items()):
             if 'content' in k:
                 if len(v) > 0: p.content = v
             elif 'title' in k:
