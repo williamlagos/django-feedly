@@ -1,2 +1,2 @@
-django==1.6.1
+django==1.11.28
 django-pure-pagination==0.2.1
