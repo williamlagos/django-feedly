@@ -1,7 +1,8 @@
+#!/usr/bin/python
 #
-# This file is part of Efforia Open Source Initiative.
+# This file is part of django-feedly project.
 #
-# Copyright (C) 2011-2014 William Oliveira de Lagos <william@efforia.com.br>
+# Copyright (C) 2011-2020 William Oliveira de Lagos <william.lagos@icloud.com>
 #
 # Feedly is free software: you can redistribute it and/or modify
 # it under the terms of the Lesser GNU General Public License as published by
@@ -21,15 +22,7 @@ from django.conf.urls import url,include
 from feedly.views import *
 
 urlpatterns = [
-    url("^pay/(?P<order_id>\d+)/$", payment_redirect, name="payment_redirect"),
-    url("^execute", payment_execute, name="payment_execute"),
     url(r'^mosaic', mosaic),
-    url(r'^basketclean', basketclean),
-    url(r'^basket', basket),
-    url(r'^pagseguro/cart', pagsegurocart),
-    url(r'^pagseguro', pagseguro),
-    url(r'^paypal/cart', paypalcart),
-    url(r'^paypal', paypal),
     url(r'^pages', page),
     url(r'^pageview', pageview),
     url(r'^pageedit', pageedit),

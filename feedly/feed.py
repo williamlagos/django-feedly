@@ -1,7 +1,8 @@
+#!/usr/bin/python
 #
-# This file is part of Efforia Open Source Initiative.
+# This file is part of django-feedly project.
 #
-# Copyright (C) 2011-2014 William Oliveira de Lagos <william@efforia.com.br>
+# Copyright (C) 2011-2020 William Oliveira de Lagos <william.lagos@icloud.com>
 #
 # Feedly is free software: you can redistribute it and/or modify
 # it under the terms of the Lesser GNU General Public License as published by

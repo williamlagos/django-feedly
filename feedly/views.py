@@ -1,7 +1,8 @@
+#!/usr/bin/python
 #
-# This file is part of Feedly Open Source Initiative.
+# This file is part of django-feedly project.
 #
-# Copyright (C) 2011-2014 William Oliveira de Lagos <william@Feedly.com.br>
+# Copyright (C) 2011-2020 William Oliveira de Lagos <william.lagos@icloud.com>
 #
 # Feedly is free software: you can redistribute it and/or modify
 # it under the terms of the Lesser GNU General Public License as published by
@@ -17,65 +18,18 @@
 # along with Feedly. If not, see <http://www.gnu.org/licenses/>.
 #
 
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
 from django.http import HttpResponse as response
-from django.views.decorators.cache import never_cache
 from .feed import Mosaic,Pages
 from .core import Feedly
-from .payments import PagSeguro,PayPal,Baskets,Cartridge
-from .models import Sellable
+
 import logging, urllib.parse
 
 logger = logging.getLogger("feedly.views")
 
-@never_cache
-def payment_redirect(request, order_id):
-    p = Cartridge()
-    return p.payment_redirect(request,order_id)
-
-@never_cache
-def payment_execute(request, template="shop/payment_confirmation.html"):
-    p = Cartridge()
-    return p.payment_execute(request,template)
-    
 def profileview(request,name='me'):
     e = Feedly()
     if request.method == 'GET':
         return e.profile_view(request,name)
-
-def basket(request):
-    b = Baskets()
-    if request.method == 'GET':
-        return b.view_items(request)
-    elif request.method == 'POST':
-        return b.add_item(request)
-
-def basketclean(request):
-    b = Baskets()
-    if request.method == 'GET':
-        return b.clean_basket(request)
-
-def pagseguro(request):
-    p = PagSeguro()
-    if request.method == 'GET':
-        return p.process(request)
-
-def pagsegurocart(request):
-    p = PagSeguro()
-    if request.method == 'GET':
-        return p.process_cart(request)
-
-def paypal(request):
-    p = PayPal()
-    if request.method == 'GET':
-        return p.process(request)
-
-def paypalcart(request):
-    p = PayPal()
-    if request.method == 'GET':
-        return p.process_cart(request)
 
 def pageview(request):
     p = Pages()
