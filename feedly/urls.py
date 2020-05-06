@@ -19,9 +19,12 @@
 #
 
 from django.conf.urls import url,include
+from django.urls import path
+
 from .views import *
 
 urlpatterns = [
+    path('boards/', BoardsView.as_view()),
     url(r'^mosaic', mosaic),
     url(r'^pages', page),
     url(r'^pageview', pageview),

@@ -19,10 +19,17 @@
 #
 
 from django.http import HttpResponse as response
+from django.http import JsonResponse
+from django.views import View
+
 from .feed import Mosaic,Pages
 from .core import Feedly
 
 import logging, urllib.parse
+
+class BoardsView(View):
+    def get(self, request):
+        return JsonResponse({'boards': 'success'})
 
 logger = logging.getLogger("feedly.views")
 
