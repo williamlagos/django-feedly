@@ -19,7 +19,7 @@
 #
 
 from django.conf.urls import url,include
-from feedly.views import *
+from .views import *
 
 urlpatterns = [
     url(r'^mosaic', mosaic),
