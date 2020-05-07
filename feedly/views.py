@@ -27,9 +27,9 @@ from .core import Feedly
 
 import logging, urllib.parse
 
-class BoardsView(View):
+class BlocksView(View):
     def get(self, request):
-        return JsonResponse({'boards': 'success'})
+        return JsonResponse({'blocks': 'success'})
 
 logger = logging.getLogger("feedly.views")
 

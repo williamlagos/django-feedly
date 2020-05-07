@@ -23,8 +23,12 @@ from django.urls import path
 
 from .views import *
 
+blocks_patterns = ([
+    path('', BlocksView.as_view())
+], 'blocks')
+
 urlpatterns = [
-    path('boards/', BoardsView.as_view()),
+    path('blocks', include(blocks_patterns)),
     url(r'^mosaic', mosaic),
     url(r'^pages', page),
     url(r'^pageview', pageview),
