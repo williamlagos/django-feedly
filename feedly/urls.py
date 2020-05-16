@@ -25,9 +25,9 @@ from .views import *
 
 urlpatterns = [
     path('', BlocksView.as_view()),
-    url(r'^mosaic', mosaic),
-    url(r'^pages', page),
-    url(r'^pageview', pageview),
-    url(r'^pageedit', pageedit),
-    url(r'^deadlines', deadlines),
+    # url(r'^mosaic', mosaic),
+    # url(r'^pages', page),
+    # url(r'^pageview', pageview),
+    # url(r'^pageedit', pageedit),
+    # url(r'^deadlines', deadlines),
 ]

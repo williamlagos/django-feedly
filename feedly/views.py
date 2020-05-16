@@ -18,6 +18,8 @@
 # along with Feedly. If not, see <http://www.gnu.org/licenses/>.
 #
 
+import logging, urllib.parse
+
 from django.http import HttpResponse as response
 from django.http import JsonResponse
 from django.views import View
@@ -25,51 +27,50 @@ from django.views import View
 from .feed import Mosaic,Pages
 from .core import Feedly
 
-import logging, urllib.parse
+logger = logging.getLogger("feedly.views")
 
 class BlocksView(View):
+
     def get(self, request):
         return JsonResponse({'blocks': 'success'})
 
-logger = logging.getLogger("feedly.views")
+    def profileview(self, request,name='me'):
+        e = Feedly()
+        if request.method == 'GET':
+            return e.profile_view(request,name)
 
-def profileview(request,name='me'):
-    e = Feedly()
-    if request.method == 'GET':
-        return e.profile_view(request,name)
+    def pageview(self, request):
+        p = Pages()
+        if request.method == 'GET':
+            return p.page_view(request)
+        
+    def pageedit(self, request):
+        p = Pages()
+        if request.method == 'GET':
+            return p.edit_page(request)
+        elif request.method == 'POST':
+            return p.save_page(request)
 
-def pageview(request):
-    p = Pages()
-    if request.method == 'GET':
-        return p.page_view(request)
-    
-def pageedit(request):
-    p = Pages()
-    if request.method == 'GET':
-        return p.edit_page(request)
-    elif request.method == 'POST':
-        return p.save_page(request)
+    def page(self, request):
+        p = Pages()
+        if request.method == 'GET':
+            return p.view_page(request)
+        elif request.method == 'POST':
+            return p.create_page(request)
 
-def page(request):
-    p = Pages()
-    if request.method == 'GET':
-        return p.view_page(request)
-    elif request.method == 'POST':
-        return p.create_page(request)
+    def mosaic(self, request):
+        m = Mosaic()
+        if request.method == 'GET':
+            return m.view_mosaic(request)
 
-def mosaic(request):
-    m = Mosaic()
-    if request.method == 'GET':
-        return m.view_mosaic(request)
+    def deadlines(self, request):
+        m = Mosaic()
+        if request.method == 'GET':
+            return m.deadlines(request)
 
-def deadlines(request):
-    m = Mosaic()
-    if request.method == 'GET':
-        return m.deadlines(request)
-
-def main(request):
-    e = Feedly()
-    if request.method == 'GET':
-        return e.start(request)
-    elif request.method == 'POST':
-        return e.external(request)
+    def main(self, request):
+        e = Feedly()
+        if request.method == 'GET':
+            return e.start(request)
+        elif request.method == 'POST':
+            return e.external(request)
