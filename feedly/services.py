@@ -39,14 +39,14 @@ class BlocksService:
     def __init__(self): 
         pass
 
-    def verify_permissions(self,request):
+    def verify_permissions(self, request):
         perm = 'super'
         if 'permissions' in request.COOKIES:
             perm = request.COOKIES['permissions']
         permissions = True if 'super' in perm else False
         return permissions
 
-    def start(self,request):
+    def start(self, request):
         # Painel do usuario
         u = user('efforia');
         permissions = self.verify_permissions(request)
@@ -60,28 +60,28 @@ class BlocksService:
         #p = list(Page.objects.filter(user=superuser()))
         #return render(request,'index.html',{'static_url':settings.STATIC_URL},content_type='text/html')
 
-    def external(self,request):
+    def external(self, request):
         u = self.current_user(request)
         sellables = Sellable.objects.filter(user=u)
         for s in sellables: s.paid = True
         return self.redirect('/')
 
-    def profile_view(self,request,name):
+    def profile_view(self, request, name):
         if len(list(User.objects.filter(username=name))) > 0: request.session['user'] = name
         r = redirect('/')
         r.set_cookie('permissions','view_only')
         return r
 
-    def json_decode(self,string):
+    def json_decode(self, string):
         j = json.loads(string,'utf-8')
         return ast.literal_eval(j)
 
-    def url_request(self,url,data=None,headers={}):
+    def url_request(self, url, data=None, headers={}):
         request = urllib.request.Request(url=url,data=data,headers=headers)
         request_open = urllib.request.urlopen(request)
         return request_open.geturl()
 
-    def do_request(self,url,data=None,headers={}):
+    def do_request(self, url, data=None, headers={}):
         response = ''
         request = urllib.request.Request(url=url,data=data,headers=headers)
         try:
@@ -98,20 +98,20 @@ class BlocksService:
             print(e.fp)
         return response
 
-    def object_token(self,token):
+    def object_token(self, token):
         relations = settings.EFFORIA_TOKENS
         typobject = relations[token]
         return typobject
 
-    def object_byid(self,token,ident):
+    def object_byid(self, token, ident):
         obj = self.object_token(token)
         return globals()[obj].objects.filter(id=ident)[0]
 
-    def convert_datetime(self,date_value):
+    def convert_datetime(self, date_value):
         d = time.strptime(date_value,'%d/%m/%Y')
         return datetime.fromtimestamp(time.mktime(d))
 
-    def authenticate(self,username,password):
+    def authenticate(self, username, password):
         exists = User.objects.filter(username=username)
         if exists:
             if exists[0].check_password(password):
@@ -127,7 +127,7 @@ class BlocksService:
         else:
             return True
 
-    def accumulate_points(self,points,request=None):
+    def accumulate_points(self, points, request=None):
         if request is None: u = self.current_user()
         else: u = self.current_user(request)
         current_profile = Profile.objects.all().filter(user=u)[0]
@@ -155,38 +155,23 @@ class BlocksService:
     #         </body>
     #     """
 
-    def deadline(self): 
-        pass
-
-    def relations(self,feed): 
-        pass
-
-    def groupables(self,feed): 
-        pass
-
-    def duplicates(self,excludes,obj): 
-        pass
-
-    def mosaic(self,request,feed): 
-        return ''
-
     # Mosaic class code
 
-    def module(self,name): 
+    def module(self, name): 
         __import__(name)
         return sys.modules[name]
 
-    def class_module(self,module,mclass):
+    def class_module(self, module, mclass):
         mod = __import__(module, fromlist=[mclass])
         return getattr(mod,mclass)
 
-    def set_current_user(self,request,name):
+    def set_current_user(self, request, name):
         key = request.COOKIES['sessionid']
         s = SessionStore(key)
         s['user'] = name
         s.save()
 
-    def current_user(self,request):
+    def current_user(self, request):
         if 'sessionid' not in request.COOKIES: 
             return User.objects.filter(username='efforia')
         else:
@@ -198,7 +183,7 @@ class BlocksService:
             user = User.objects.all().filter(username=name)
             return user[0]
 
-    def view_mosaic(self,request,objlist=None,other=None):
+    def view_mosaic(self, request, objlist=None, other=None):
         if 'user' in request.session: u = user(request.session['user'])
         else: u = user('efforia')
         try: page = request.GET.get('page',1)
@@ -214,7 +199,7 @@ class BlocksService:
         rendered = self.apps_mosaic(request,objects,u)
         return response(rendered,content_type='text/html')
 
-    def apps_mosaic(self,request,feed,user):
+    def apps_mosaic(self, request, feed, user):
         apps,source = settings.EFFORIA_APPS,''
         for a in apps:
             m = self.module('%s.app'%a)
@@ -222,7 +207,7 @@ class BlocksService:
             source += app.mosaic(request,feed)
         return source
 
-    def feed(self,userobj,others=None):
+    def feed(self, userobj, others=None):
         apps = settings.EFFORIA_APPS
         feed = []; exclude = []; people = []
         if others is not None:
@@ -241,7 +226,7 @@ class BlocksService:
                 app.groupables(feed) 
         return feed
         
-    def deadlines(self,request):
+    def deadlines(self, request):
         u = self.current_user(request)
         apps = settings.EFFORIA_APPS
         for a in apps:
@@ -253,10 +238,10 @@ class BlocksService:
 
     # Pages class code
 
-    def view_page(self,request):
+    def view_page(self, request):
         return render(request,'page.jade',{},content_type='text/html')
 
-    def create_page(self,request):
+    def create_page(self, request):
         print(request.POST)
         c = request.POST['content']
         t = request.POST['title']
@@ -265,7 +250,7 @@ class BlocksService:
         p.save()
         return render(request,'pageview.jade',{'content':c},content_type='text/html')
 
-    def edit_page(self,request):
+    def edit_page(self, request):
         page_id = int(request.GET['id'])
         p = Page.objects.filter(id=page_id)[0]
         return render(request,'pagedit.jade',{
@@ -273,7 +258,7 @@ class BlocksService:
                        'content':p.content.encode('utf-8'),
                        'pageid':page_id},content_type='text/html')
 
-    def save_page(self,request):
+    def save_page(self, request):
         page_id = request.POST['id']
         p = Page.objects.filter(id=page_id)[0]
         for k,v in list(request.POST.items()):
@@ -284,12 +269,12 @@ class BlocksService:
         p.save()
         return response('Page saved successfully')
 
-    def page_view(self,request):
+    def page_view(self, request):
         n = request.GET['title']
         c = Page.objects.filter(name=n)[0].content
         return render(request,'pageview.jade',{'content':c},content_type='text/html')
 
-    def view_mosaic(self,request,objlist=None,other=None):
+    def pages_view_mosaic(self, request, objlist=None, other=None):
         if 'user' in request.session: u = user(request.session['user'])
         else: u = user('efforia')
         try: page = request.GET.get('page',1)
@@ -305,7 +290,7 @@ class BlocksService:
         apps = settings.EFFORIA_APPS
         return render(request,'grid.jade',{'f':objects,'p':p,'path':request.path,'apps':apps,
                                            'static_url':settings.STATIC_URL},content_type='text/html')
-    def feed(self,userobj):
+    def pages_feed(self, userobj):
         apps = settings.EFFORIA_APPS
         feed = []; exclude = []; people = [userobj]
         for f in Followed.objects.filter(follower=userobj.id): people.append(Profile.objects.filter(id=f.followed)[0].user)
@@ -317,51 +302,4 @@ class BlocksService:
                 app.duplicates(exclude,feed)
                 app.groupables(feed) 
         return feed
-
-    def deadlines(self,request):
-        u = self.current_user(request)
-        apps = settings.EFFORIA_APPS
-        for a in apps:
-            __import__('%s.app'%a)
-            m = sys.modules['%s.app'%a]
-            app = m.Application(u,a)
-            app.deadline()
-        return response('Deadlines verified successfully')
-
-    # Pages class code
-    def view_page(self,request):
-        return render(request,'page.jade',{},content_type='text/html')
-
-    def create_page(self,request):
-        print(request.POST)
-        c = request.POST['content']
-        t = request.POST['title']
-        u = self.current_user(request)
-        p = Page(content=c,user=u,name='!#%s' % t)
-        p.save()
-        return render(request,'pageview.jade',{'content':c},content_type='text/html')
-
-    def edit_page(self,request):
-        page_id = int(request.GET['id'])
-        p = Page.objects.filter(id=page_id)[0]
-        return render(request,'pagedit.jade',{
-                       'title':p.name,
-                       'content':p.content.encode('utf-8'),
-                       'pageid':page_id},content_type='text/html')
-
-    def save_page(self,request):
-        page_id = request.POST['id']
-        p = Page.objects.filter(id=page_id)[0]
-        for k,v in list(request.POST.items()):
-            if 'content' in k:
-                if len(v) > 0: p.content = v
-            elif 'title' in k:
-                if len(v) > 0: p.name = v
-        p.save()
-        return response('Page saved successfully')
-        
-    def page_view(self,request):
-        n = request.GET['title']
-        c = Page.objects.filter(name=n)[0].content
-        return render(request,'pageview.jade',{'content':c},content_type='text/html')
 
