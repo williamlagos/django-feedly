@@ -36,6 +36,8 @@ def superuser(): return User.objects.filter(is_superuser=True)[0]
 
 class BlocksService:
 
+    model = Page
+
     def __init__(self): 
         pass
 
