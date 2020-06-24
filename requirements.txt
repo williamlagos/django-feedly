@@ -1,2 +1,2 @@
-django==3.0.7
-django-pure-pagination==0.3.0
+django>=3.0.7
+django-pure-pagination>=0.3.0
