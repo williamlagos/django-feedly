@@ -25,7 +25,7 @@ from django.template import Context,Template
 from django.utils.timezone import now
 from datetime import date
 
-locale = settings.LOCALE_DATE
+# locale = settings.LOCALE_DATE
 
 class Page(Model):
     name = CharField(default='!#',max_length=50)
@@ -34,6 +34,6 @@ class Page(Model):
     date = DateTimeField(auto_now_add=True)
     def token(self): return self.name[:2]
     def name_trimmed(self): return self.name[2:]
-    def month(self): return locale[self.date.month-1]
+    # def month(self): return locale[self.date.month-1]
 
 
