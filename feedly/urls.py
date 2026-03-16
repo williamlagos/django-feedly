@@ -18,16 +18,12 @@
 # along with Feedly. If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.conf.urls import url,include
 from django.urls import path
 
-from .views import *
+from .views import BlocksView, PageListView, PageDetailView
 
 urlpatterns = [
     path('', BlocksView.as_view()),
-    # url(r'^mosaic', mosaic),
-    # url(r'^pages', page),
-    # url(r'^pageview', pageview),
-    # url(r'^pageedit', pageedit),
-    # url(r'^deadlines', deadlines),
+    path('pages/', PageListView.as_view()),
+    path('pages/<int:page_id>/', PageDetailView.as_view()),
 ]

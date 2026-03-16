@@ -18,59 +18,97 @@
 # along with Feedly. If not, see <http://www.gnu.org/licenses/>.
 #
 
-import logging, urllib.parse
+import json
 
-from django.http import HttpResponse as response
 from django.http import JsonResponse
 from django.views import View
 
-from .feed import Mosaic,Pages
-from .core import Feedly
+from .models import Page
 
-logger = logging.getLogger("feedly.views")
+PAGE_NAME_PREFIX = '!#'
+
+
+def page_to_dict(page):
+    return {
+        'id': page.id,
+        'name': page.name_trimmed(),
+        'content': page.content,
+        'date': page.date.isoformat(),
+    }
+
 
 class BlocksView(View):
 
     def get(self, request):
         return JsonResponse({'blocks': 'success'})
 
-    def profileview(self, request,name='me'):
-        e = Feedly()
-        if request.method == 'GET':
-            return e.profile_view(request,name)
 
-    def pageview(self, request):
-        p = Pages()
-        if request.method == 'GET':
-            return p.page_view(request)
-        
-    def pageedit(self, request):
-        p = Pages()
-        if request.method == 'GET':
-            return p.edit_page(request)
-        elif request.method == 'POST':
-            return p.save_page(request)
+class PageListView(View):
 
-    def page(self, request):
-        p = Pages()
-        if request.method == 'GET':
-            return p.view_page(request)
-        elif request.method == 'POST':
-            return p.create_page(request)
+    def get(self, request):
+        pages = Page.objects.all().order_by('-date')
+        data = [page_to_dict(p) for p in pages]
+        return JsonResponse({'pages': data})
 
-    def mosaic(self, request):
-        m = Mosaic()
-        if request.method == 'GET':
-            return m.view_mosaic(request)
+    def post(self, request):
+        try:
+            body = json.loads(request.body)
+        except (json.JSONDecodeError, ValueError):
+            return JsonResponse({'error': 'Invalid JSON body'}, status=400)
+        name = body.get('name', '').strip()
+        content = body.get('content', '').strip()
+        if not name:
+            return JsonResponse({'error': 'name is required'}, status=400)
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'Authentication required'}, status=401)
+        page = Page.objects.create(
+            name='%s%s' % (PAGE_NAME_PREFIX, name),
+            content=content,
+            user=request.user,
+        )
+        return JsonResponse(page_to_dict(page), status=201)
 
-    def deadlines(self, request):
-        m = Mosaic()
-        if request.method == 'GET':
-            return m.deadlines(request)
 
-    def main(self, request):
-        e = Feedly()
-        if request.method == 'GET':
-            return e.start(request)
-        elif request.method == 'POST':
-            return e.external(request)
+class PageDetailView(View):
+
+    def get(self, request, page_id):
+        try:
+            page = Page.objects.get(id=page_id)
+        except Page.DoesNotExist:
+            return JsonResponse({'error': 'Page not found'}, status=404)
+        return JsonResponse(page_to_dict(page))
+
+    def put(self, request, page_id):
+        try:
+            page = Page.objects.get(id=page_id)
+        except Page.DoesNotExist:
+            return JsonResponse({'error': 'Page not found'}, status=404)
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'Authentication required'}, status=401)
+        if page.user != request.user:
+            return JsonResponse({'error': 'Permission denied'}, status=403)
+        try:
+            body = json.loads(request.body)
+        except (json.JSONDecodeError, ValueError):
+            return JsonResponse({'error': 'Invalid JSON body'}, status=400)
+        name = body.get('name', '').strip()
+        content = body.get('content', '').strip()
+        if name:
+            page.name = '%s%s' % (PAGE_NAME_PREFIX, name)
+        if content:
+            page.content = content
+        page.save()
+        return JsonResponse(page_to_dict(page))
+
+    def delete(self, request, page_id):
+        try:
+            page = Page.objects.get(id=page_id)
+        except Page.DoesNotExist:
+            return JsonResponse({'error': 'Page not found'}, status=404)
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'Authentication required'}, status=401)
+        if page.user != request.user:
+            return JsonResponse({'error': 'Permission denied'}, status=403)
+        page.delete()
+        return JsonResponse({'status': 'deleted'})
+
