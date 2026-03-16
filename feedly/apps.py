@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 class DefaultConfig(AppConfig):
 
-    name = 'feedly.feedly'
+    name = 'feedly'
     verbose_name = 'Blocks'
