@@ -2,7 +2,7 @@
 #
 # This file is part of django-feedly project.
 #
-# Copyright (C) 2011-2020 William Oliveira de Lagos <william.lagos@icloud.com>
+# Copyright (C) 2011-2026 William Oliveira de Lagos <william.lagos@icloud.com>
 #
 # Feedly is free software: you can redistribute it and/or modify
 # it under the terms of the Lesser GNU General Public License as published by
@@ -13,17 +13,41 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with Feedly. If not, see <http://www.gnu.org/licenses/>.
-#
 
 from django.urls import path
 
-from .views import BlocksView, PageListView, PageDetailView
+from .views import (
+    BlocksView,
+    ChronologicalFeedView,
+    ContentModerationView,
+    PageDetailView,
+    PageListView,
+    PersonalizedFeedView,
+    SemanticSearchView,
+    TrendingFeedView,
+    UserInterestProfileView,
+)
 
 urlpatterns = [
-    path('', BlocksView.as_view()),
-    path('pages/', PageListView.as_view()),
-    path('pages/<int:page_id>/', PageDetailView.as_view()),
+    path("", BlocksView.as_view(), name="feedly-blocks"),
+    path("pages/", PageListView.as_view(), name="feedly-pages"),
+    path("pages/<int:page_id>/", PageDetailView.as_view(), name="feedly-page-detail"),
+    path(
+        "feeds/chronological/",
+        ChronologicalFeedView.as_view(),
+        name="feedly-feed-chronological",
+    ),
+    path("feeds/trending/", TrendingFeedView.as_view(), name="feedly-feed-trending"),
+    path(
+        "feeds/personalized/",
+        PersonalizedFeedView.as_view(),
+        name="feedly-feed-personalized",
+    ),
+    path("feeds/search/", SemanticSearchView.as_view(), name="feedly-semantic-search"),
+    path("feeds/moderate/", ContentModerationView.as_view(), name="feedly-moderate"),
+    path(
+        "feeds/interests/",
+        UserInterestProfileView.as_view(),
+        name="feedly-user-interests",
+    ),
 ]
